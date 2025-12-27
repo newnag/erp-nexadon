@@ -39,6 +39,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [\App\Http\Controllers\FinancialTransactionController::class, 'index'])->name('index');
         Route::get('/create', [\App\Http\Controllers\FinancialTransactionController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\FinancialTransactionController::class, 'store'])->name('store');
+        Route::get('/recent-descriptions', [\App\Http\Controllers\FinancialTransactionController::class, 'recentDescriptions'])->name('recent-descriptions');
         Route::get('/{financialTransaction}/edit', [\App\Http\Controllers\FinancialTransactionController::class, 'edit'])->name('edit');
         Route::put('/{financialTransaction}', [\App\Http\Controllers\FinancialTransactionController::class, 'update'])->name('update');
         Route::delete('/{financialTransaction}', [\App\Http\Controllers\FinancialTransactionController::class, 'destroy'])->name('destroy');

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { ref, onMounted, onUnmounted } from 'vue';
+import QuickTransactionModal from '@/components/QuickTransactionModal.vue';
+import { Button } from '@/components/ui/button';
 
 interface Category {
     id: number;
@@ -59,6 +62,53 @@ const breadcrumbs = [
     },
 ];
 
+// Quick Transaction Modal
+const showQuickModal = ref(false);
+
+const openQuickModal = () => {
+    showQuickModal.value = true;
+};
+
+const onTransactionSuccess = () => {
+    router.reload({ only: ['transactions', 'summary'] });
+};
+
+// Keyboard shortcuts
+const handleGlobalKeydown = (e: KeyboardEvent) => {
+    // Ctrl+N or Cmd+N to open quick modal (when not in input)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n' && !isInputFocused()) {
+        e.preventDefault();
+        openQuickModal();
+    }
+    // Alt+1 for quick income
+    else if (e.altKey && e.key === '1' && !isInputFocused()) {
+        e.preventDefault();
+        openQuickModal();
+    }
+    // Alt+2 for quick expense
+    else if (e.altKey && e.key === '2' && !isInputFocused()) {
+        e.preventDefault();
+        openQuickModal();
+    }
+};
+
+const isInputFocused = () => {
+    const activeElement = document.activeElement;
+    return (
+        activeElement?.tagName === 'INPUT' ||
+        activeElement?.tagName === 'TEXTAREA' ||
+        activeElement?.tagName === 'SELECT'
+    );
+};
+
+onMounted(() => {
+    window.addEventListener('keydown', handleGlobalKeydown);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleGlobalKeydown);
+});
+
 // Filter form
 const filterForm = useForm({
     type: props.filters.type || '',
@@ -84,6 +134,25 @@ const deleteTransaction = (id: number) => {
     if (confirm('คุณต้องการลบรายการนี้หรือไม่?')) {
         router.delete(`/finance/${id}`);
     }
+};
+
+// Duplicate transaction
+const duplicateTransaction = (transaction: Transaction) => {
+    router.post('/finance', {
+        type: transaction.type,
+        category_id: transaction.category.id,
+        amount: transaction.amount,
+        description: transaction.description,
+        transaction_date: new Date().toISOString().split('T')[0],
+        payment_method: transaction.payment_method || 'cash',
+        notes: '',
+        reference_number: '',
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            router.reload({ only: ['transactions', 'summary'] });
+        },
+    });
 };
 
 // Format currency
@@ -128,17 +197,60 @@ const getPaymentMethodLabel = (method?: string) => {
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                         รายรับรายจ่าย
                     </h2>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 items-center">
+                        <!-- Keyboard shortcut hint -->
+                        <span class="hidden lg:inline text-xs text-gray-400">
+                            กด <kbd class="px-1.5 py-0.5 bg-gray-100 rounded text-gray-600">Ctrl+N</kbd> เพื่อเพิ่มรายการด่วน
+                        </span>
                         <Link href="/finance/categories" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                             จัดการหมวดหมู่
                         </Link>
                         <Link href="/finance/report" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
                             ดูรายงาน
                         </Link>
+                        <Button @click="openQuickModal" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded shadow-lg">
+                            ⚡ บันทึกด่วน
+                        </Button>
                         <Link href="/finance/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             บันทึกรายการ
                         </Link>
                     </div>
+                </div>
+
+                <!-- Quick Action Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                    <button
+                        @click="openQuickModal"
+                        class="p-4 bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg hover:shadow-md transition-all text-left group"
+                    >
+                        <div class="text-2xl mb-1">📈</div>
+                        <div class="font-medium text-green-700">เพิ่มรายรับ</div>
+                        <div class="text-xs text-green-600 opacity-0 group-hover:opacity-100 transition-opacity">คลิกเพื่อเริ่ม</div>
+                    </button>
+                    <button
+                        @click="openQuickModal"
+                        class="p-4 bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-lg hover:shadow-md transition-all text-left group"
+                    >
+                        <div class="text-2xl mb-1">📉</div>
+                        <div class="font-medium text-red-700">เพิ่มรายจ่าย</div>
+                        <div class="text-xs text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">คลิกเพื่อเริ่ม</div>
+                    </button>
+                    <Link
+                        href="/finance/report"
+                        class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg hover:shadow-md transition-all text-left group"
+                    >
+                        <div class="text-2xl mb-1">📊</div>
+                        <div class="font-medium text-purple-700">ดูรายงาน</div>
+                        <div class="text-xs text-purple-600 opacity-0 group-hover:opacity-100 transition-opacity">วิเคราะห์ข้อมูล</div>
+                    </Link>
+                    <Link
+                        href="/finance/categories"
+                        class="p-4 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg hover:shadow-md transition-all text-left group"
+                    >
+                        <div class="text-2xl mb-1">📁</div>
+                        <div class="font-medium text-gray-700">จัดการหมวดหมู่</div>
+                        <div class="text-xs text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">เพิ่ม/แก้ไขหมวดหมู่</div>
+                    </Link>
                 </div>
 
                 <!-- Summary Cards -->
@@ -263,6 +375,13 @@ const getPaymentMethodLabel = (method?: string) => {
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                        <button 
+                                            @click="duplicateTransaction(transaction)" 
+                                            class="text-green-600 hover:text-green-900 mr-2"
+                                            title="คัดลอกรายการนี้"
+                                        >
+                                            📋
+                                        </button>
                                         <Link :href="`/finance/${transaction.id}/edit`" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                             แก้ไข
                                         </Link>
@@ -310,5 +429,12 @@ const getPaymentMethodLabel = (method?: string) => {
                 </div>
             </div>
         </div>
+
+        <!-- Quick Transaction Modal -->
+        <QuickTransactionModal 
+            v-model="showQuickModal" 
+            :categories="categories"
+            @success="onTransactionSuccess"
+        />
     </AppLayout>
 </template>

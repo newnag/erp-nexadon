@@ -164,4 +164,31 @@ class FinancialTransactionController extends Controller
             ],
         ]);
     }
+
+    /**
+     * ดึงรายละเอียดที่เคยใช้บ่อยตามหมวดหมู่
+     */
+    public function recentDescriptions(Request $request)
+    {
+        $categoryId = $request->get('category_id');
+        $type = $request->get('type');
+
+        $query = FinancialTransaction::select('description')
+            ->selectRaw('COUNT(*) as usage_count')
+            ->selectRaw('MAX(created_at) as last_used')
+            ->groupBy('description')
+            ->orderByDesc('usage_count')
+            ->orderByDesc('last_used')
+            ->limit(10);
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($type) {
+            $query->where('type', $type);
+        }
+
+        return response()->json($query->get());
+    }
 }
