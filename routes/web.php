@@ -5,14 +5,14 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('ingredients', \App\Http\Controllers\IngredientController::class);
@@ -50,6 +50,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/categories', [\App\Http\Controllers\FinancialCategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{financialCategory}', [\App\Http\Controllers\FinancialCategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{financialCategory}', [\App\Http\Controllers\FinancialCategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+    // ระบบ Activity Log
+    Route::prefix('activity-logs')->name('activity-logs.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('index');
+        Route::get('/{activityLog}', [\App\Http\Controllers\ActivityLogController::class, 'show'])->name('show');
+    });
+
+    // ระบบ Notifications
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('unread-count');
+        Route::get('/recent', [\App\Http\Controllers\NotificationController::class, 'recent'])->name('recent');
+        Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
+        Route::post('/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('mark-as-read');
+        Route::post('/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/read/all', [\App\Http\Controllers\NotificationController::class, 'destroyAllRead'])->name('destroy-all-read');
     });
 });
 
