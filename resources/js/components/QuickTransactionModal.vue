@@ -265,14 +265,14 @@ const formatCurrency = (amount: number) => {
                     <span>บันทึกรายการด่วน</span>
                 </DialogTitle>
                 <DialogDescription>
-                    กด <kbd class="px-1.5 py-0.5 text-xs bg-gray-100 rounded">Ctrl+Enter</kbd> เพื่อบันทึกและเพิ่มรายการต่อ |
-                    <kbd class="px-1.5 py-0.5 text-xs bg-gray-100 rounded">Ctrl+S</kbd> เพื่อบันทึกและปิด
+                    กด <kbd class="px-1.5 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 dark:text-gray-300 rounded">Ctrl+Enter</kbd> เพื่อบันทึกและเพิ่มรายการต่อ |
+                    <kbd class="px-1.5 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 dark:text-gray-300 rounded">Ctrl+S</kbd> เพื่อบันทึกและปิด
                 </DialogDescription>
             </DialogHeader>
 
             <form @submit.prevent="submit" class="space-y-4">
                 <!-- Transaction Type Toggle -->
-                <div class="flex rounded-lg overflow-hidden border">
+                <div class="flex rounded-lg overflow-hidden border dark:border-gray-600">
                     <button
                         type="button"
                         @click="form.type = 'income'"
@@ -280,7 +280,7 @@ const formatCurrency = (amount: number) => {
                             'flex-1 py-3 text-center font-medium transition-all',
                             form.type === 'income'
                                 ? 'bg-green-500 text-white'
-                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100',
+                                : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600',
                         ]"
                     >
                         <span class="mr-2">📈</span>รายรับ
@@ -292,7 +292,7 @@ const formatCurrency = (amount: number) => {
                             'flex-1 py-3 text-center font-medium transition-all',
                             form.type === 'expense'
                                 ? 'bg-red-500 text-white'
-                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100',
+                                : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600',
                         ]"
                     >
                         <span class="mr-2">📉</span>รายจ่าย
@@ -311,8 +311,8 @@ const formatCurrency = (amount: number) => {
                             :class="[
                                 'px-3 py-2 text-sm rounded-lg border transition-all',
                                 form.category_id === category.id.toString()
-                                    ? 'ring-2 ring-offset-1'
-                                    : 'hover:bg-gray-50',
+                                    ? 'ring-2 ring-offset-1 dark:ring-offset-gray-800'
+                                    : 'hover:bg-gray-50 dark:hover:bg-gray-700',
                             ]"
                             :style="{
                                 borderColor: category.color,
@@ -348,17 +348,17 @@ const formatCurrency = (amount: number) => {
                             :key="preset"
                             type="button"
                             @click="setAmount(preset)"
-                            class="px-2.5 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                            class="px-2.5 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded transition-colors"
                         >
                             {{ formatCurrency(preset) }}
                         </button>
-                        <span class="text-gray-400 mx-1">|</span>
+                        <span class="text-gray-400 dark:text-gray-500 mx-1">|</span>
                         <button
                             v-for="preset in [100, 500, 1000]"
                             :key="'add-' + preset"
                             type="button"
                             @click="addAmount(preset)"
-                            class="px-2.5 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 rounded transition-colors"
+                            class="px-2.5 py-1 text-xs bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-800/50 text-blue-700 dark:text-blue-300 rounded transition-colors"
                         >
                             +{{ formatCurrency(preset) }}
                         </button>
@@ -372,7 +372,7 @@ const formatCurrency = (amount: number) => {
                 <div>
                     <Label class="text-sm font-medium mb-2 block">
                         รายละเอียด
-                        <span v-if="currentCategory" class="text-gray-400 font-normal ml-1">
+                        <span v-if="currentCategory" class="text-gray-400 dark:text-gray-500 font-normal ml-1">
                             (หมวด: {{ currentCategory.name }})
                         </span>
                     </Label>
@@ -384,14 +384,14 @@ const formatCurrency = (amount: number) => {
                     />
                     
                     <!-- Loading indicator -->
-                    <div v-if="isLoadingDescriptions" class="mt-2 text-xs text-gray-400">
+                    <div v-if="isLoadingDescriptions" class="mt-2 text-xs text-gray-400 dark:text-gray-500">
                         กำลังโหลดรายการที่เคยใช้...
                     </div>
                     
                     <!-- History descriptions (from API) -->
                     <div v-else class="mt-2">
                         <div v-if="recentDescriptions.length > 0" class="mb-2">
-                            <span class="text-xs text-gray-500 mb-1 block">📝 เคยใช้บ่อย:</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mb-1 block">📝 เคยใช้บ่อย:</span>
                             <div class="flex flex-wrap gap-1.5">
                                 <button
                                     v-for="item in recentDescriptions"
@@ -402,7 +402,7 @@ const formatCurrency = (amount: number) => {
                                         'px-2.5 py-1 text-xs rounded transition-colors flex items-center gap-1',
                                         form.description === item.description
                                             ? 'bg-green-500 text-white'
-                                            : 'bg-green-50 hover:bg-green-100 text-green-700 border border-green-200',
+                                            : 'bg-green-50 dark:bg-green-900/30 hover:bg-green-100 dark:hover:bg-green-800/40 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700',
                                     ]"
                                     :title="`ใช้ ${item.usage_count} ครั้ง`"
                                 >
@@ -414,7 +414,7 @@ const formatCurrency = (amount: number) => {
                         
                         <!-- Default preset descriptions -->
                         <div>
-                            <span class="text-xs text-gray-500 mb-1 block">💡 รายการแนะนำ:</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mb-1 block">💡 รายการแนะนำ:</span>
                             <div class="flex flex-wrap gap-1.5">
                                 <button
                                     v-for="desc in defaultPresetDescriptions[form.type]"
@@ -425,7 +425,7 @@ const formatCurrency = (amount: number) => {
                                         'px-2.5 py-1 text-xs rounded transition-colors',
                                         form.description === desc
                                             ? 'bg-blue-500 text-white'
-                                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700',
+                                            : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300',
                                     ]"
                                 >
                                     {{ desc }}
@@ -451,8 +451,8 @@ const formatCurrency = (amount: number) => {
                             :class="[
                                 'flex-1 py-2 px-3 text-sm rounded-lg border transition-all flex items-center justify-center gap-1.5',
                                 form.payment_method === method.value
-                                    ? 'bg-blue-50 border-blue-500 text-blue-700 ring-1 ring-blue-500'
-                                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100',
+                                    ? 'bg-blue-50 dark:bg-blue-900/40 border-blue-500 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500'
+                                    : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600',
                             ]"
                         >
                             <span>{{ method.icon }}</span>
@@ -491,11 +491,11 @@ const formatCurrency = (amount: number) => {
 
                 <!-- Optional Fields (Collapsible) -->
                 <details class="group">
-                    <summary class="cursor-pointer text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
+                    <summary class="cursor-pointer text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1">
                         <span class="group-open:rotate-90 transition-transform">▶</span>
                         ข้อมูลเพิ่มเติม (ไม่บังคับ)
                     </summary>
-                    <div class="mt-3 space-y-3 pl-4 border-l-2 border-gray-200">
+                    <div class="mt-3 space-y-3 pl-4 border-l-2 border-gray-200 dark:border-gray-600">
                         <div>
                             <Label class="text-sm font-medium mb-1 block">เลขที่อ้างอิง</Label>
                             <Input v-model="form.reference_number" type="text" placeholder="เช่น เลขที่ใบเสร็จ" />

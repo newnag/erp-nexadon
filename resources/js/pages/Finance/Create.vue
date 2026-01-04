@@ -61,17 +61,17 @@ const onTypeChange = () => {
         <div class="py-6">
             <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
                 <div class="mb-6 px-6">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         บันทึกรายรับรายจ่าย
                     </h2>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                         <form @submit.prevent="submit">
                             <!-- Transaction Type -->
                             <div class="mb-6">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">ประเภทรายการ</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">ประเภทรายการ</label>
                                 <div class="flex gap-4">
                                     <label class="flex items-center">
                                         <input 
@@ -98,10 +98,10 @@ const onTypeChange = () => {
 
                             <!-- Category -->
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">หมวดหมู่</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">หมวดหมู่</label>
                                 <select 
                                     v-model="form.category_id" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500"
                                     required
                                 >
                                     <option value="">เลือกหมวดหมู่</option>
@@ -119,13 +119,13 @@ const onTypeChange = () => {
 
                             <!-- Amount -->
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">จำนวนเงิน (บาท)</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">จำนวนเงิน (บาท)</label>
                                 <input 
                                     v-model="form.amount" 
                                     type="number" 
                                     step="0.01" 
                                     min="0.01"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" 
                                     required
                                     placeholder="0.00"
                                 >
@@ -136,11 +136,11 @@ const onTypeChange = () => {
 
                             <!-- Description -->
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">รายละเอียด</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">รายละเอียด</label>
                                 <input 
                                     v-model="form.description" 
                                     type="text" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500" 
                                     required
                                     placeholder="เช่น ค่าอาหาร, รายได้จากการขาย"
                                 >
@@ -151,11 +151,11 @@ const onTypeChange = () => {
 
                             <!-- Transaction Date -->
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">วันที่</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">วันที่</label>
                                 <input 
                                     v-model="form.transaction_date" 
                                     type="date" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500 [color-scheme:light] dark:[color-scheme:dark]" 
                                     required
                                 >
                                 <div v-if="form.errors.transaction_date" class="text-red-500 text-xs italic mt-1">
@@ -165,10 +165,10 @@ const onTypeChange = () => {
 
                             <!-- Payment Method -->
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">วิธีชำระเงิน</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">วิธีชำระเงิน</label>
                                 <select 
                                     v-model="form.payment_method" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500"
                                 >
                                     <option value="cash">เงินสด</option>
                                     <option value="transfer">โอนเงิน</option>
@@ -180,29 +180,29 @@ const onTypeChange = () => {
 
                             <!-- Reference Number -->
                             <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">เลขที่อ้างอิง (ไม่บังคับ)</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">เลขที่อ้างอิง (ไม่บังคับ)</label>
                                 <input 
                                     v-model="form.reference_number" 
                                     type="text" 
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500"
                                     placeholder="เช่น เลขที่ใบเสร็จ"
                                 >
                             </div>
 
                             <!-- Notes -->
                             <div class="mb-6">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">หมายเหตุ (ไม่บังคับ)</label>
+                                <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">หมายเหตุ (ไม่บังคับ)</label>
                                 <textarea 
                                     v-model="form.notes" 
                                     rows="3"
-                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    class="shadow appearance-none border border-gray-300 dark:border-gray-600 rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-500"
                                     placeholder="รายละเอียดเพิ่มเติม"
                                 ></textarea>
                             </div>
 
                             <!-- Submit Button -->
                             <div class="flex items-center justify-between">
-                                <Link href="/finance" class="text-gray-600 hover:text-gray-900">
+                                <Link href="/finance" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100">
                                     ← กลับ
                                 </Link>
                                 <button 
