@@ -13,11 +13,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // สร้างผู้ใช้งานเริ่มต้น
         User::factory()->create([
             'name' => 'Inrada',
             'email' => 'inrada.nkb@gmail.com',
+        ]);
+
+        // เรียกรัน Seeders ทั้งหมดตามลำดับที่ถูกต้อง
+        $this->call([
+            // 1. Seeders พื้นฐานที่ไม่ขึ้นกับตารางอื่น
+            UnitConversionSeeder::class,
+            FinancialCategorySeeder::class,
+            
+            // 2. Seeders ที่ขึ้นกับตารางอื่นๆ (เพิ่มในอนาคต)
+            // SupplierSeeder::class,
+            // IngredientSeeder::class,
+            // RecipeSeeder::class,
         ]);
     }
 }
