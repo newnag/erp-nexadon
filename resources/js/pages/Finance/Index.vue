@@ -321,82 +321,86 @@ const getPaymentMethodLabel = (method?: string) => {
 
                 <!-- Transactions Table -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ประเภท</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">หมวดหมู่</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รายละเอียด</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วิธีชำระ</th>
-                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">จำนวนเงิน</th>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">จัดการ</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="transaction in transactions.data" :key="transaction.id">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ formatDate(transaction.transaction_date) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span :class="[
-                                            'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                                            transaction.type === 'income' 
-                                                ? 'bg-green-100 text-green-800' 
-                                                : 'bg-red-100 text-red-800'
-                                        ]">
-                                            {{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span 
-                                            class="px-2 py-1 text-xs font-medium rounded"
-                                            :style="{ backgroundColor: transaction.category?.color + '20', color: transaction.category?.color }"
-                                        >
-                                            {{ transaction.category?.name }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="text-sm text-gray-900">{{ transaction.description }}</div>
-                                        <div v-if="transaction.reference_number" class="text-xs text-gray-500">
-                                            อ้างอิง: {{ transaction.reference_number }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ getPaymentMethodLabel(transaction.payment_method) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right">
-                                        <span :class="[
-                                            'font-semibold',
-                                            transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                                        ]">
-                                            {{ transaction.type === 'income' ? '+' : '-' }}{{ formatCurrency(transaction.amount) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        <button 
-                                            @click="duplicateTransaction(transaction)" 
-                                            class="text-green-600 hover:text-green-900 mr-2"
-                                            title="คัดลอกรายการนี้"
-                                        >
-                                            📋
-                                        </button>
-                                        <Link :href="`/finance/${transaction.id}/edit`" class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                            แก้ไข
-                                        </Link>
-                                        <button @click="deleteTransaction(transaction.id)" class="text-red-600 hover:text-red-900">
-                                            ลบ
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr v-if="transactions.data.length === 0">
-                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                                        ไม่พบรายการ
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="p-4 sm:p-6 bg-white border-b border-gray-200">
+                        <div class="overflow-x-auto -mx-4 sm:mx-0">
+                            <div class="inline-block min-w-full align-middle px-4 sm:px-0">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่</th>
+                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ประเภท</th>
+                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">หมวดหมู่</th>
+                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รายละเอียด</th>
+                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วิธีชำระ</th>
+                                            <th class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">จำนวนเงิน</th>
+                                            <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">จัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr v-for="transaction in transactions.data" :key="transaction.id">
+                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ formatDate(transaction.transaction_date) }}
+                                            </td>
+                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                                <span :class="[
+                                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                                    transaction.type === 'income' 
+                                                        ? 'bg-green-100 text-green-800' 
+                                                        : 'bg-red-100 text-red-800'
+                                                ]">
+                                                    {{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                                <span 
+                                                    class="px-2 py-1 text-xs font-medium rounded"
+                                                    :style="{ backgroundColor: transaction.category?.color + '20', color: transaction.category?.color }"
+                                                >
+                                                    {{ transaction.category?.name }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 sm:px-6 py-4">
+                                                <div class="text-sm text-gray-900">{{ transaction.description }}</div>
+                                                <div v-if="transaction.reference_number" class="text-xs text-gray-500">
+                                                    อ้างอิง: {{ transaction.reference_number }}
+                                                </div>
+                                            </td>
+                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {{ getPaymentMethodLabel(transaction.payment_method) }}
+                                            </td>
+                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right">
+                                                <span :class="[
+                                                    'font-semibold',
+                                                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                                                ]">
+                                                    {{ transaction.type === 'income' ? '+' : '-' }}{{ formatCurrency(transaction.amount) }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                                                <button 
+                                                    @click="duplicateTransaction(transaction)" 
+                                                    class="text-green-600 hover:text-green-900 mr-2"
+                                                    title="คัดลอกรายการนี้"
+                                                >
+                                                    📋
+                                                </button>
+                                                <Link :href="`/finance/${transaction.id}/edit`" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                                    แก้ไข
+                                                </Link>
+                                                <button @click="deleteTransaction(transaction.id)" class="text-red-600 hover:text-red-900">
+                                                    ลบ
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="transactions.data.length === 0">
+                                            <td colspan="7" class="px-4 sm:px-6 py-4 text-center text-gray-500">
+                                                ไม่พบรายการ
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                         <!-- Pagination -->
                         <div v-if="transactions.last_page > 1" class="mt-4 flex justify-center">
