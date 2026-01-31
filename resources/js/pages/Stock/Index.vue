@@ -97,60 +97,60 @@ const getStockStatusBadge = (status: string) => {
     <Head title="จัดการสต็อค" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
-            <!-- Header Actions -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex h-full flex-1 flex-col gap-4 sm:gap-6 p-4 sm:p-6">
+            <!-- Header Actions - Responsive -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                 <div>
-                    <h1 class="text-2xl font-bold">จัดการสต็อค</h1>
-                    <p class="text-muted-foreground">ภาพรวมและการจัดการสต็อควัตถุดิบ</p>
+                    <h1 class="text-xl sm:text-2xl font-bold">จัดการสต็อค</h1>
+                    <p class="text-sm text-muted-foreground">ภาพรวมและการจัดการสต็อควัตถุดิบ</p>
                 </div>
-                <div class="flex gap-2">
-                    <Link href="/stock/in">
-                        <Button variant="default">
-                            <TrendingUp class="w-4 h-4 mr-2" />
-                            รับสินค้าเข้า
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <Link href="/stock/in" class="flex-1 sm:flex-none">
+                        <Button variant="default" class="w-full sm:w-auto text-sm">
+                            <TrendingUp class="w-4 h-4 mr-1 sm:mr-2" />
+                            <span class="hidden xs:inline">รับสินค้า</span>เข้า
                         </Button>
                     </Link>
-                    <Link href="/stock/out">
-                        <Button variant="outline">
-                            <TrendingDown class="w-4 h-4 mr-2" />
-                            เบิกสินค้าออก
+                    <Link href="/stock/out" class="flex-1 sm:flex-none">
+                        <Button variant="outline" class="w-full sm:w-auto text-sm">
+                            <TrendingDown class="w-4 h-4 mr-1 sm:mr-2" />
+                            <span class="hidden xs:inline">เบิกสินค้า</span>ออก
                         </Button>
                     </Link>
                 </div>
             </div>
 
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Summary Cards - Responsive -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">รายการวัตถุดิบทั้งหมด</CardTitle>
-                        <Package class="h-4 w-4 text-muted-foreground" />
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">รายการวัตถุดิบ</CardTitle>
+                        <Package class="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">{{ formatNumber(summary.totalItems) }}</div>
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold">{{ formatNumber(summary.totalItems) }}</div>
                         <p class="text-xs text-muted-foreground">รายการ</p>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">มูลค่าสต็อคคงเหลือ</CardTitle>
-                        <TrendingUp class="h-4 w-4 text-muted-foreground" />
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">มูลค่าสต็อค</CardTitle>
+                        <TrendingUp class="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">{{ formatCurrency(summary.totalValue) }}</div>
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold truncate">{{ formatCurrency(summary.totalValue) }}</div>
                         <p class="text-xs text-muted-foreground">บาท</p>
                     </CardContent>
                 </Card>
 
-                <Card :class="{ 'border-red-300 bg-red-50': summary.lowStockItems > 0 }">
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">สินค้าใกล้หมด</CardTitle>
-                        <AlertTriangle :class="['h-4 w-4', summary.lowStockItems > 0 ? 'text-red-500' : 'text-muted-foreground']" />
+                <Card :class="{ 'border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-900/30': summary.lowStockItems > 0 }" class="col-span-2 sm:col-span-1">
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">สินค้าใกล้หมด</CardTitle>
+                        <AlertTriangle :class="['h-3 w-3 sm:h-4 sm:w-4', summary.lowStockItems > 0 ? 'text-red-500' : 'text-muted-foreground']" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold" :class="{ 'text-red-600': summary.lowStockItems > 0 }">
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold" :class="{ 'text-red-600': summary.lowStockItems > 0 }">
                             {{ formatNumber(summary.lowStockItems) }}
                         </div>
                         <p class="text-xs text-muted-foreground">รายการต้องสั่งซื้อ</p>
@@ -158,7 +158,7 @@ const getStockStatusBadge = (status: string) => {
                 </Card>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 <!-- Low Stock Alert -->
                 <Card v-if="lowStockIngredients.length > 0" class="border-red-200">
                     <CardHeader>
@@ -281,37 +281,37 @@ const getStockStatusBadge = (status: string) => {
                 </CardContent>
             </Card>
 
-            <!-- Quick Actions -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Quick Actions - Responsive Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
                 <Link href="/stock/in">
-                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors">
-                        <CardContent class="flex flex-col items-center justify-center py-6">
-                            <TrendingUp class="w-8 h-8 text-green-600 mb-2" />
-                            <span class="font-medium">รับสินค้าเข้า</span>
+                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors active:scale-[0.98]">
+                        <CardContent class="flex flex-col items-center justify-center py-4 sm:py-6">
+                            <TrendingUp class="w-6 h-6 sm:w-8 sm:h-8 text-green-600 mb-1 sm:mb-2" />
+                            <span class="font-medium text-xs sm:text-sm text-center">รับสินค้าเข้า</span>
                         </CardContent>
                     </Card>
                 </Link>
                 <Link href="/stock/out">
-                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors">
-                        <CardContent class="flex flex-col items-center justify-center py-6">
-                            <TrendingDown class="w-8 h-8 text-red-600 mb-2" />
-                            <span class="font-medium">เบิกสินค้าออก</span>
+                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors active:scale-[0.98]">
+                        <CardContent class="flex flex-col items-center justify-center py-4 sm:py-6">
+                            <TrendingDown class="w-6 h-6 sm:w-8 sm:h-8 text-red-600 mb-1 sm:mb-2" />
+                            <span class="font-medium text-xs sm:text-sm text-center">เบิกสินค้าออก</span>
                         </CardContent>
                     </Card>
                 </Link>
                 <Link href="/stock/adjustment">
-                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors">
-                        <CardContent class="flex flex-col items-center justify-center py-6">
-                            <Package class="w-8 h-8 text-blue-600 mb-2" />
-                            <span class="font-medium">ปรับปรุงสต็อค</span>
+                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors active:scale-[0.98]">
+                        <CardContent class="flex flex-col items-center justify-center py-4 sm:py-6">
+                            <Package class="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 mb-1 sm:mb-2" />
+                            <span class="font-medium text-xs sm:text-sm text-center">ปรับปรุงสต็อค</span>
                         </CardContent>
                     </Card>
                 </Link>
                 <Link href="/stock/history">
-                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors">
-                        <CardContent class="flex flex-col items-center justify-center py-6">
-                            <History class="w-8 h-8 text-purple-600 mb-2" />
-                            <span class="font-medium">ประวัติทั้งหมด</span>
+                    <Card class="hover:bg-muted/50 cursor-pointer transition-colors active:scale-[0.98]">
+                        <CardContent class="flex flex-col items-center justify-center py-4 sm:py-6">
+                            <History class="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 mb-1 sm:mb-2" />
+                            <span class="font-medium text-xs sm:text-sm text-center">ประวัติทั้งหมด</span>
                         </CardContent>
                     </Card>
                 </Link>

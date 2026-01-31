@@ -104,21 +104,21 @@ const maxDailyValue = computed(() => {
     <Head title="รายงานการเงิน" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-6">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="py-4 sm:py-6">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
+                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         รายงานการเงิน
                     </h2>
-                    <Link href="/finance" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    <Link href="/finance" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm">
                         ← กลับ
                     </Link>
                 </div>
 
                 <!-- Date Filter -->
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-                    <form @submit.prevent="applyFilters" class="flex items-end gap-4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 sm:p-4 mb-4 sm:mb-6">
+                    <form @submit.prevent="applyFilters" class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">ตั้งแต่วันที่</label>
                             <input type="date" v-model="filterForm.start_date" class="rounded-md border-gray-300 shadow-sm">

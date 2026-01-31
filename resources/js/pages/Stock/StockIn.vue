@@ -121,20 +121,20 @@ const submit = () => {
     <Head title="รับสินค้าเข้าสต็อค" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-6">
+        <div class="flex h-full flex-1 flex-col gap-4 sm:gap-6 p-3 sm:p-4 md:p-6">
             <!-- Header -->
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 sm:gap-4">
                 <Link href="/stock">
-                    <Button variant="ghost" size="icon">
-                        <ArrowLeft class="w-5 h-5" />
+                    <Button variant="ghost" size="icon" class="h-8 w-8 sm:h-10 sm:w-10">
+                        <ArrowLeft class="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
                 </Link>
-                <div>
-                    <h1 class="text-2xl font-bold flex items-center gap-2">
-                        <TrendingUp class="w-6 h-6 text-green-600" />
-                        รับสินค้าเข้าสต็อค
+                <div class="min-w-0">
+                    <h1 class="text-lg sm:text-2xl font-bold flex items-center gap-2">
+                        <TrendingUp class="w-5 h-5 sm:w-6 sm:h-6 text-green-600 shrink-0" />
+                        <span class="truncate">รับสินค้าเข้าสต็อค</span>
                     </h1>
-                    <p class="text-muted-foreground">บันทึกการรับวัตถุดิบเข้าคลัง</p>
+                    <p class="text-sm text-muted-foreground hidden sm:block">บันทึกการรับวัตถุดิบเข้าคลัง</p>
                 </div>
             </div>
 

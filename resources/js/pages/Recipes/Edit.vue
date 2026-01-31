@@ -201,22 +201,22 @@ const deleteRecipe = () => {
     <Head :title="`แก้ไข ${recipe.name}`" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-6 px-6 flex justify-between items-center">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <div class="py-4 sm:py-6 lg:py-8">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+                <div class="mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         แก้ไขสูตรอาหาร: {{ recipe.name }}
                     </h2>
                     <button 
                         @click="deleteRecipe" 
-                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        class="w-full sm:w-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm"
                     >
-                        ลบสูตร
+                        🗑️ ลบสูตร
                     </button>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg">
+                    <div class="p-4 sm:p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                         <form @submit.prevent="submit">
                             <!-- Basic Info -->
                             <div class="mb-6">

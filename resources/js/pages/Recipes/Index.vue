@@ -33,19 +33,19 @@ const deleteRecipe = (id: number) => {
     <Head title="Recipes (SOP)" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center mb-6 px-6">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <div class="py-4 sm:py-6 lg:py-8">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
+                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         สูตรอาหาร (SOP)
                     </h2>
-                    <Link :href="create().url" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        สร้างสูตร
+                    <Link :href="create().url" class="w-full sm:w-auto text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm sm:text-base">
+                        + สร้างสูตร
                     </Link>
                 </div>
 
                 <!-- Card Grid View -->
-                <div v-if="recipes.length > 0" class="px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div v-if="recipes.length > 0" class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
                     <div v-for="recipe in recipes" :key="recipe.id" class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                         <!-- Recipe Image -->
                         <Link :href="show(recipe.id).url" class="block">
@@ -96,8 +96,8 @@ const deleteRecipe = (id: number) => {
                 </div>
 
                 <!-- Empty State -->
-                <div v-else class="bg-white overflow-hidden shadow-sm sm:rounded-lg mx-6">
-                    <div class="p-12 text-center">
+                <div v-else class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg">
+                    <div class="p-6 sm:p-12 text-center">
                         <span class="text-6xl mb-4 block">📝</span>
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">ยังไม่มีสูตรอาหาร</h3>
                         <p class="text-gray-500 mb-4">เริ่มต้นสร้างสูตรอาหาร (SOP) ของคุณ</p>

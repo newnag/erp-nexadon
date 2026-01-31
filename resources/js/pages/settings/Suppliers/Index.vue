@@ -91,10 +91,10 @@ const deleteSupplier = (supplier: Supplier) => {
     <AppLayout :breadcrumbs="breadcrumbItems">
         <Head title="Suppliers" />
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex flex-col space-y-6">
-                    <div class="flex justify-between items-center">
+        <div class="py-4 sm:py-6 lg:py-8">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+                <div class="flex flex-col space-y-4 sm:space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <HeadingSmall
                         title="ซัพพลายเออร์"
                         description="จัดการซัพพลายเออร์ของคุณ"

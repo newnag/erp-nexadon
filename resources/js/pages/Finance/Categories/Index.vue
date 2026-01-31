@@ -105,26 +105,26 @@ const colorPresets = [
     <Head title="หมวดหมู่การเงิน" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-6">
-            <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="py-4 sm:py-6">
+            <div class="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
+                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         หมวดหมู่การเงิน
                     </h2>
-                    <div class="flex gap-2">
-                        <Link href="/finance" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <Link href="/finance" class="flex-1 sm:flex-none text-center bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-3 sm:px-4 rounded text-sm">
                             ← กลับ
                         </Link>
-                        <button @click="openCreateModal" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            เพิ่มหมวดหมู่
+                        <button @click="openCreateModal" class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 sm:px-4 rounded text-sm">
+                            + เพิ่มหมวดหมู่
                         </button>
                     </div>
                 </div>
 
                 <!-- Income Categories -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                    <div class="p-6">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg mb-4 sm:mb-6">
+                    <div class="p-4 sm:p-6">
                         <h3 class="text-lg font-semibold text-green-600 mb-4">หมวดหมู่รายรับ</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div 

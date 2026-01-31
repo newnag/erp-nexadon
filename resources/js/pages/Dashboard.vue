@@ -113,39 +113,39 @@ const formatDate = (dateString: string) => {
     <Head title="แดชบอร์ด" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-6 p-4 md:p-6">
-            <!-- Header with Quick Actions -->
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex h-full flex-1 flex-col gap-4 sm:gap-6 p-3 sm:p-4 md:p-6">
+            <!-- Header with Quick Actions - Responsive -->
+            <div class="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight">แดชบอร์ด</h1>
-                    <p class="text-muted-foreground">ภาพรวมระบบจัดการธุรกิจ</p>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">แดชบอร์ด</h1>
+                    <p class="text-sm text-muted-foreground">ภาพรวมระบบจัดการธุรกิจ</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                    <Button as-child size="sm" variant="outline">
+                    <Button as-child size="sm" variant="outline" class="flex-1 sm:flex-none">
                         <Link :href="financeCreate().url">
                             <Plus class="mr-1 h-4 w-4" />
-                            บันทึกรายรับ/จ่าย
+                            <span class="hidden xs:inline">บันทึก</span>รายรับ/จ่าย
                         </Link>
                     </Button>
-                    <Button as-child size="sm">
+                    <Button as-child size="sm" class="flex-1 sm:flex-none">
                         <Link :href="recipesCreate().url">
                             <Plus class="mr-1 h-4 w-4" />
-                            สร้างสูตรใหม่
+                            <span class="hidden xs:inline">สร้าง</span>สูตรใหม่
                         </Link>
                     </Button>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Stats Cards - Responsive Grid -->
+            <div class="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
                 <!-- Total Ingredients -->
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">วัตถุดิบทั้งหมด</CardTitle>
-                        <Package class="h-4 w-4 text-muted-foreground" />
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">วัตถุดิบทั้งหมด</CardTitle>
+                        <Package class="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">{{ stats.totalIngredients }}</div>
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold">{{ stats.totalIngredients }}</div>
                         <Link :href="ingredientsIndex().url" class="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
                             ดูทั้งหมด <ArrowRight class="h-3 w-3" />
                         </Link>
@@ -154,12 +154,12 @@ const formatDate = (dateString: string) => {
 
                 <!-- Total Recipes -->
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">สูตรอาหาร</CardTitle>
-                        <ChefHat class="h-4 w-4 text-muted-foreground" />
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">สูตรอาหาร</CardTitle>
+                        <ChefHat class="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold">{{ stats.totalRecipes }}</div>
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold">{{ stats.totalRecipes }}</div>
                         <Link :href="recipesIndex().url" class="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
                             ดูทั้งหมด <ArrowRight class="h-3 w-3" />
                         </Link>
@@ -168,12 +168,12 @@ const formatDate = (dateString: string) => {
 
                 <!-- Income This Month -->
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">รายรับเดือนนี้</CardTitle>
-                        <TrendingUp class="h-4 w-4 text-green-500" />
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">รายรับ<span class="hidden sm:inline">เดือนนี้</span></CardTitle>
+                        <TrendingUp class="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold text-green-600">{{ formatCurrency(stats.incomeThisMonth) }}</div>
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold text-green-600 truncate">{{ formatCurrency(stats.incomeThisMonth) }}</div>
                         <Link :href="financeIndex().url" class="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
                             ดูรายละเอียด <ArrowRight class="h-3 w-3" />
                         </Link>
@@ -182,12 +182,12 @@ const formatDate = (dateString: string) => {
 
                 <!-- Expense This Month -->
                 <Card>
-                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle class="text-sm font-medium">รายจ่ายเดือนนี้</CardTitle>
-                        <TrendingDown class="h-4 w-4 text-red-500" />
+                    <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                        <CardTitle class="text-xs sm:text-sm font-medium">รายจ่าย<span class="hidden sm:inline">เดือนนี้</span></CardTitle>
+                        <TrendingDown class="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />
                     </CardHeader>
-                    <CardContent>
-                        <div class="text-2xl font-bold text-red-600">{{ formatCurrency(stats.expenseThisMonth) }}</div>
+                    <CardContent class="p-3 sm:p-6 pt-0">
+                        <div class="text-lg sm:text-2xl font-bold text-red-600 truncate">{{ formatCurrency(stats.expenseThisMonth) }}</div>
                         <Link :href="financeIndex().url" class="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
                             ดูรายละเอียด <ArrowRight class="h-3 w-3" />
                         </Link>
@@ -195,21 +195,21 @@ const formatDate = (dateString: string) => {
                 </Card>
             </div>
 
-            <!-- Profit Summary Card -->
+            <!-- Profit Summary Card - Responsive -->
             <Card :class="stats.profitThisMonth >= 0 ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/30' : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/30'">
-                <CardContent class="flex items-center justify-between py-4">
-                    <div class="flex items-center gap-4">
-                        <div :class="['rounded-full p-3', stats.profitThisMonth >= 0 ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900']">
-                            <Wallet :class="['h-6 w-6', stats.profitThisMonth >= 0 ? 'text-green-600' : 'text-red-600']" />
+                <CardContent class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 py-3 sm:py-4 px-3 sm:px-6">
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div :class="['rounded-full p-2 sm:p-3', stats.profitThisMonth >= 0 ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:bg-red-900']">
+                            <Wallet :class="['h-4 w-4 sm:h-6 sm:w-6', stats.profitThisMonth >= 0 ? 'text-green-600' : 'text-red-600']" />
                         </div>
                         <div>
-                            <p class="text-sm text-muted-foreground">กำไร/ขาดทุนสุทธิ เดือนนี้</p>
-                            <p :class="['text-3xl font-bold', stats.profitThisMonth >= 0 ? 'text-green-600' : 'text-red-600']">
+                            <p class="text-xs sm:text-sm text-muted-foreground">กำไร/ขาดทุนสุทธิ เดือนนี้</p>
+                            <p :class="['text-xl sm:text-3xl font-bold truncate', stats.profitThisMonth >= 0 ? 'text-green-600' : 'text-red-600']">
                                 {{ formatCurrency(stats.profitThisMonth) }}
                             </p>
                         </div>
                     </div>
-                    <Button as-child variant="outline">
+                    <Button as-child variant="outline" size="sm" class="w-full sm:w-auto">
                         <Link :href="financeIndex().url">
                             <BarChart3 class="mr-2 h-4 w-4" />
                             ดูรายงาน
@@ -218,8 +218,8 @@ const formatDate = (dateString: string) => {
                 </CardContent>
             </Card>
 
-            <!-- Main Content Grid -->
-            <div class="grid gap-6 lg:grid-cols-2">
+            <!-- Main Content Grid - Responsive -->
+            <div class="grid gap-4 sm:gap-6 lg:grid-cols-2">
                 <!-- Low Stock Alert -->
                 <Card>
                     <CardHeader>
@@ -374,36 +374,36 @@ const formatDate = (dateString: string) => {
                     </CardContent>
                 </Card>
 
-                <!-- Quick Actions -->
+                <!-- Quick Actions - Responsive -->
                 <Card>
-                    <CardHeader>
-                        <CardTitle>เมนูลัด</CardTitle>
-                        <CardDescription>เข้าถึงฟังก์ชันหลักได้รวดเร็ว</CardDescription>
+                    <CardHeader class="p-4 sm:p-6">
+                        <CardTitle class="text-base sm:text-lg">เมนูลัด</CardTitle>
+                        <CardDescription class="text-xs sm:text-sm">เข้าถึงฟังก์ชันหลักได้รวดเร็ว</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <div class="grid grid-cols-2 gap-3">
-                            <Button as-child variant="outline" class="h-auto flex-col gap-2 py-4">
+                    <CardContent class="p-4 sm:p-6 pt-0">
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3">
+                            <Button as-child variant="outline" class="h-auto flex-col gap-1 sm:gap-2 py-3 sm:py-4">
                                 <Link :href="ingredientsIndex().url">
-                                    <Package class="h-6 w-6" />
-                                    <span>จัดการวัตถุดิบ</span>
+                                    <Package class="h-5 w-5 sm:h-6 sm:w-6" />
+                                    <span class="text-xs sm:text-sm">วัตถุดิบ</span>
                                 </Link>
                             </Button>
-                            <Button as-child variant="outline" class="h-auto flex-col gap-2 py-4">
+                            <Button as-child variant="outline" class="h-auto flex-col gap-1 sm:gap-2 py-3 sm:py-4">
                                 <Link :href="stockIndex().url">
-                                    <Truck class="h-6 w-6" />
-                                    <span>จัดการสต็อค</span>
+                                    <Truck class="h-5 w-5 sm:h-6 sm:w-6" />
+                                    <span class="text-xs sm:text-sm">สต็อค</span>
                                 </Link>
                             </Button>
-                            <Button as-child variant="outline" class="h-auto flex-col gap-2 py-4">
+                            <Button as-child variant="outline" class="h-auto flex-col gap-1 sm:gap-2 py-3 sm:py-4">
                                 <Link :href="recipesIndex().url">
-                                    <ChefHat class="h-6 w-6" />
-                                    <span>สูตรอาหาร</span>
+                                    <ChefHat class="h-5 w-5 sm:h-6 sm:w-6" />
+                                    <span class="text-xs sm:text-sm">สูตรอาหาร</span>
                                 </Link>
                             </Button>
-                            <Button as-child variant="outline" class="h-auto flex-col gap-2 py-4">
+                            <Button as-child variant="outline" class="h-auto flex-col gap-1 sm:gap-2 py-3 sm:py-4">
                                 <Link :href="financeIndex().url">
-                                    <Wallet class="h-6 w-6" />
-                                    <span>รายรับ-รายจ่าย</span>
+                                    <Wallet class="h-5 w-5 sm:h-6 sm:w-6" />
+                                    <span class="text-xs sm:text-sm">การเงิน</span>
                                 </Link>
                             </Button>
                         </div>

@@ -71,16 +71,16 @@ const onTypeChange = () => {
     <Head title="แก้ไขรายรับรายจ่าย" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-6">
-            <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-                <div class="mb-6 px-6">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <div class="py-4 sm:py-6">
+            <div class="max-w-3xl mx-auto px-3 sm:px-6 lg:px-8">
+                <div class="mb-4 sm:mb-6">
+                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         แก้ไขรายการ
                     </h2>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg">
+                    <div class="p-4 sm:p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                         <form @submit.prevent="submit">
                             <!-- Transaction Type -->
                             <div class="mb-6">

@@ -92,30 +92,30 @@ const deleteRecipe = () => {
     <Head :title="recipe.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center mb-6 px-6">
-                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <div class="py-4 sm:py-6 lg:py-8">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
+                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
                         {{ recipe.name }} (SOP)
                     </h2>
-                    <div class="flex gap-2">
-                        <Link :href="index().url" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <Link :href="index().url" class="flex-1 sm:flex-none text-center bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded text-sm">
                             ← กลับ
                         </Link>
-                        <a :href="`/recipes/${recipe.id}/print`" target="_blank" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        <a :href="`/recipes/${recipe.id}/print`" target="_blank" class="flex-1 sm:flex-none text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded text-sm">
                             🖨️ พิมพ์
                         </a>
-                        <Link :href="edit(recipe.id).url" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <Link :href="edit(recipe.id).url" class="flex-1 sm:flex-none text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded text-sm">
                             แก้ไข
                         </Link>
-                        <button @click="deleteRecipe" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        <button @click="deleteRecipe" class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded text-sm">
                             ลบ
                         </button>
                     </div>
                 </div>
 
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 bg-white border-b border-gray-200">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg">
+                    <div class="p-4 sm:p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                         <!-- Recipe Image & Header Info -->
                         <div class="flex flex-col md:flex-row gap-6 mb-8">
                             <!-- Recipe Main Image -->
