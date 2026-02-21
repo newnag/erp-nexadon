@@ -166,7 +166,7 @@ class FinancialTransactionController extends Controller
     }
 
     /**
-     * ดึงรายละเอียดที่เคยใช้บ่อยตามหมวดหมู่
+     * ดึงรายละเอียดที่เคยเพิ่มทั้งหมดตามหมวดหมู่
      */
     public function recentDescriptions(Request $request)
     {
@@ -177,9 +177,7 @@ class FinancialTransactionController extends Controller
             ->selectRaw('COUNT(*) as usage_count')
             ->selectRaw('MAX(created_at) as last_used')
             ->groupBy('description')
-            ->orderByDesc('usage_count')
-            ->orderByDesc('last_used')
-            ->limit(10);
+            ->orderByDesc('last_used');
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);

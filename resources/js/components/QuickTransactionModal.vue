@@ -391,7 +391,7 @@ const formatCurrency = (amount: number) => {
                     <!-- History descriptions (from API) -->
                     <div v-else class="mt-2">
                         <div v-if="recentDescriptions.length > 0" class="mb-2">
-                            <span class="text-xs text-gray-500 dark:text-gray-400 mb-1 block">📝 เคยใช้บ่อย:</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 mb-1 block">📝 รายการที่เคยเพิ่ม:</span>
                             <div class="flex flex-wrap gap-1.5">
                                 <button
                                     v-for="item in recentDescriptions"
