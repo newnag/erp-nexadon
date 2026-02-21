@@ -13,7 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         // Update enum to include adjustment_in and adjustment_out
-        DB::statement("ALTER TABLE inventory_transactions MODIFY COLUMN type ENUM('purchase', 'usage', 'adjustment', 'waste', 'adjustment_in', 'adjustment_out') NOT NULL");
+        if (DB::getDriverName() === 'sqlite') {
+            Schema::table('inventory_transactions', function (Blueprint $table) {
+                $table->enum('type', ['purchase', 'usage', 'adjustment', 'waste', 'adjustment_in', 'adjustment_out'])->change();
+            });
+        } else {
+            DB::statement("ALTER TABLE inventory_transactions MODIFY COLUMN type ENUM('purchase', 'usage', 'adjustment', 'waste', 'adjustment_in', 'adjustment_out') NOT NULL");
+        }
     }
 
     /**
@@ -21,6 +27,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE inventory_transactions MODIFY COLUMN type ENUM('purchase', 'usage', 'adjustment', 'waste') NOT NULL");
+        if (DB::getDriverName() === 'sqlite') {
+            Schema::table('inventory_transactions', function (Blueprint $table) {
+                $table->enum('type', ['purchase', 'usage', 'adjustment', 'waste'])->change();
+            });
+        } else {
+            DB::statement("ALTER TABLE inventory_transactions MODIFY COLUMN type ENUM('purchase', 'usage', 'adjustment', 'waste') NOT NULL");
+        }
     }
 };
