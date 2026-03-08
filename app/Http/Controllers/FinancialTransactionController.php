@@ -138,6 +138,49 @@ class FinancialTransactionController extends Controller
             ->with('category')
             ->get();
 
+        // รายละเอียดตามคำอธิบาย แยกต่อหมวดหมู่ (แปลงเป็น array ทันทีเพื่อหลีกเลี่ยง lazy-load N+1)
+        $incomeDescriptionBreakdown = FinancialTransaction::income()
+            ->dateBetween($startDate, $endDate)
+            ->selectRaw('category_id, description, SUM(amount) as total, COUNT(*) as item_count')
+            ->groupBy('category_id', 'description')
+            ->orderBy('category_id')
+            ->orderByRaw('SUM(amount) DESC')
+            ->get()
+            ->groupBy('category_id')
+            ->map(fn($items) => $items->map(fn($t) => [
+                'description' => $t->description,
+                'total'       => $t->total,
+                'count'       => $t->item_count,
+            ])->values());
+
+        $expenseDescriptionBreakdown = FinancialTransaction::expense()
+            ->dateBetween($startDate, $endDate)
+            ->selectRaw('category_id, description, SUM(amount) as total, COUNT(*) as item_count')
+            ->groupBy('category_id', 'description')
+            ->orderBy('category_id')
+            ->orderByRaw('SUM(amount) DESC')
+            ->get()
+            ->groupBy('category_id')
+            ->map(fn($items) => $items->map(fn($t) => [
+                'description' => $t->description,
+                'total'       => $t->total,
+                'count'       => $t->item_count,
+            ])->values());
+
+        $incomeByCategory = $incomeByCategory->map(fn($item) => [
+            'category_id' => $item->category_id,
+            'total'       => $item->total,
+            'category'    => $item->category,
+            'details'     => $incomeDescriptionBreakdown->get($item->category_id, collect())->values(),
+        ]);
+
+        $expenseByCategory = $expenseByCategory->map(fn($item) => [
+            'category_id' => $item->category_id,
+            'total'       => $item->total,
+            'category'    => $item->category,
+            'details'     => $expenseDescriptionBreakdown->get($item->category_id, collect())->values(),
+        ]);
+
         // สรุปรายวัน
         $dailySummary = FinancialTransaction::dateBetween($startDate, $endDate)
             ->selectRaw('transaction_date, type, SUM(amount) as total')

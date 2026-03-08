@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\Models\ActivityLog;
 use App\Models\User;
-use App\Models\UserNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
 
 class ActivityLogger
@@ -172,32 +172,40 @@ class ActivityLogger
 
     /**
      * Notify all other users about the activity.
+     * Uses a single bulk INSERT to avoid N individual write transactions (critical for SQLite performance).
      */
     protected static function notifyUsers(ActivityLog $activityLog): void
     {
         $currentUserId = Auth::id();
         $userName = Auth::user()?->name ?? 'ระบบ';
 
-        // Get all users except the current user
-        $users = User::when($currentUserId, function ($query) use ($currentUserId) {
+        // Get only the IDs to keep the query lightweight
+        $userIds = User::when($currentUserId, function ($query) use ($currentUserId) {
             return $query->where('id', '!=', $currentUserId);
-        })->get();
+        })->pluck('id');
 
-        // Determine notification title and type
+        if ($userIds->isEmpty()) {
+            return;
+        }
+
         $title = self::getNotificationTitle($activityLog, $userName);
         $type = self::getNotificationType($activityLog->action);
         $link = self::getNotificationLink($activityLog);
+        $now = now()->toDateTimeString();
 
-        foreach ($users as $user) {
-            UserNotification::create([
-                'user_id' => $user->id,
-                'activity_log_id' => $activityLog->id,
-                'title' => $title,
-                'message' => $activityLog->description,
-                'type' => $type,
-                'link' => $link,
-            ]);
-        }
+        // Single bulk INSERT — one DB round-trip instead of N
+        $records = $userIds->map(fn($uid) => [
+            'user_id'          => $uid,
+            'activity_log_id'  => $activityLog->id,
+            'title'            => $title,
+            'message'          => $activityLog->description,
+            'type'             => $type,
+            'link'             => $link,
+            'created_at'       => $now,
+            'updated_at'       => $now,
+        ])->all();
+
+        DB::table('user_notifications')->insert($records);
     }
 
     /**

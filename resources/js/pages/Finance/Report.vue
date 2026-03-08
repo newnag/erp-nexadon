@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Category {
     id: number;
@@ -10,10 +10,17 @@ interface Category {
     color: string;
 }
 
+interface DescriptionDetail {
+    description: string;
+    total: number;
+    count: number;
+}
+
 interface CategorySummary {
     category_id: number;
     total: number;
     category: Category;
+    details: DescriptionDetail[];
 }
 
 interface DailySummary {
@@ -37,6 +44,19 @@ const props = defineProps<{
         end_date: string;
     };
 }>();
+
+// Track which category rows are expanded (key = "income_1" or "expense_2")
+const expandedCategories = ref<Set<string>>(new Set());
+
+const toggleCategory = (key: string) => {
+    if (expandedCategories.value.has(key)) {
+        expandedCategories.value.delete(key);
+    } else {
+        expandedCategories.value.add(key);
+    }
+};
+
+const isExpanded = (key: string) => expandedCategories.value.has(key);
 
 const breadcrumbs = [
     {
@@ -162,32 +182,70 @@ const maxDailyValue = computed(() => {
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     <!-- Income by Category -->
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold text-green-600 mb-4">รายรับตามหมวดหมู่</h3>
-                        <div v-if="income_by_category.length > 0" class="space-y-3">
-                            <div v-for="item in income_by_category" :key="item.category_id" class="flex items-center gap-3">
-                                <div 
-                                    class="w-3 h-3 rounded-full flex-shrink-0" 
-                                    :style="{ backgroundColor: item.category?.color }"
-                                ></div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center mb-1">
-                                        <span class="text-sm font-medium">{{ item.category?.name }}</span>
-                                        <span class="text-sm text-gray-600">{{ formatCurrency(Number(item.total)) }}</span>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-lg font-semibold text-green-600 dark:text-green-400">รายรับตามหมวดหมู่</h3>
+                        </div>
+                        <div v-if="income_by_category.length > 0">
+                            <div v-for="item in income_by_category" :key="item.category_id">
+                                <!-- Category row -->
+                                <button
+                                    type="button"
+                                    class="w-full flex items-center gap-3 px-6 py-3 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors text-left"
+                                    @click="toggleCategory('income_' + item.category_id)"
+                                >
+                                    <div
+                                        class="w-3 h-3 rounded-full shrink-0"
+                                        :style="{ backgroundColor: item.category?.color }"
+                                    ></div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">
+                                                {{ item.category?.name }}
+                                            </span>
+                                            <span class="text-sm font-bold text-green-600 dark:text-green-400 ml-2 shrink-0">
+                                                {{ formatCurrency(Number(item.total)) }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                <div
+                                                    class="h-1.5 rounded-full"
+                                                    :style="{
+                                                        width: getPercentage(Number(item.total), incomeTotal) + '%',
+                                                        backgroundColor: item.category?.color,
+                                                    }"
+                                                ></div>
+                                            </div>
+                                            <span class="text-xs text-gray-400 w-9 text-right shrink-0">
+                                                {{ getPercentage(Number(item.total), incomeTotal) }}%
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div 
-                                            class="h-2 rounded-full" 
-                                            :style="{ 
-                                                width: getPercentage(Number(item.total), incomeTotal) + '%',
-                                                backgroundColor: item.category?.color 
-                                            }"
-                                        ></div>
+                                    <span class="text-gray-400 dark:text-gray-500 text-xs shrink-0 ml-1">
+                                        {{ isExpanded('income_' + item.category_id) ? '▲' : '▼' }}
+                                    </span>
+                                </button>
+                                <!-- Description detail rows -->
+                                <div v-if="isExpanded('income_' + item.category_id)" class="bg-green-50/60 dark:bg-green-900/10 border-t border-green-100 dark:border-green-800">
+                                    <div v-if="item.details && item.details.length > 0">
+                                        <div
+                                            v-for="detail in item.details"
+                                            :key="detail.description"
+                                            class="flex items-center justify-between px-8 py-2 border-b border-green-100/60 dark:border-green-800/40 last:border-0"
+                                        >
+                                            <div class="flex items-center gap-2 min-w-0">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0"></span>
+                                                <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ detail.description }}</span>
+                                                <span class="text-xs text-gray-400 shrink-0">({{ detail.count }} รายการ)</span>
+                                            </div>
+                                            <span class="text-sm font-medium text-green-600 dark:text-green-400 ml-4 shrink-0">
+                                                {{ formatCurrency(Number(detail.total)) }}
+                                            </span>
+                                        </div>
                                     </div>
+                                    <div v-else class="px-8 py-2 text-xs text-gray-400">ไม่มีรายละเอียด</div>
                                 </div>
-                                <span class="text-xs text-gray-500 w-12 text-right">
-                                    {{ getPercentage(Number(item.total), incomeTotal) }}%
-                                </span>
                             </div>
                         </div>
                         <div v-else class="text-center text-gray-500 py-8">
@@ -196,32 +254,70 @@ const maxDailyValue = computed(() => {
                     </div>
 
                     <!-- Expense by Category -->
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <h3 class="text-lg font-semibold text-red-600 mb-4">รายจ่ายตามหมวดหมู่</h3>
-                        <div v-if="expense_by_category.length > 0" class="space-y-3">
-                            <div v-for="item in expense_by_category" :key="item.category_id" class="flex items-center gap-3">
-                                <div 
-                                    class="w-3 h-3 rounded-full flex-shrink-0" 
-                                    :style="{ backgroundColor: item.category?.color }"
-                                ></div>
-                                <div class="flex-1">
-                                    <div class="flex justify-between items-center mb-1">
-                                        <span class="text-sm font-medium">{{ item.category?.name }}</span>
-                                        <span class="text-sm text-gray-600">{{ formatCurrency(Number(item.total)) }}</span>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-lg font-semibold text-red-600 dark:text-red-400">รายจ่ายตามหมวดหมู่</h3>
+                        </div>
+                        <div v-if="expense_by_category.length > 0">
+                            <div v-for="item in expense_by_category" :key="item.category_id">
+                                <!-- Category row -->
+                                <button
+                                    type="button"
+                                    class="w-full flex items-center gap-3 px-6 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left"
+                                    @click="toggleCategory('expense_' + item.category_id)"
+                                >
+                                    <div
+                                        class="w-3 h-3 rounded-full shrink-0"
+                                        :style="{ backgroundColor: item.category?.color }"
+                                    ></div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">
+                                                {{ item.category?.name }}
+                                            </span>
+                                            <span class="text-sm font-bold text-red-600 dark:text-red-400 ml-2 shrink-0">
+                                                {{ formatCurrency(Number(item.total)) }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                                                <div
+                                                    class="h-1.5 rounded-full"
+                                                    :style="{
+                                                        width: getPercentage(Number(item.total), expenseTotal) + '%',
+                                                        backgroundColor: item.category?.color,
+                                                    }"
+                                                ></div>
+                                            </div>
+                                            <span class="text-xs text-gray-400 w-9 text-right shrink-0">
+                                                {{ getPercentage(Number(item.total), expenseTotal) }}%
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-2">
-                                        <div 
-                                            class="h-2 rounded-full" 
-                                            :style="{ 
-                                                width: getPercentage(Number(item.total), expenseTotal) + '%',
-                                                backgroundColor: item.category?.color 
-                                            }"
-                                        ></div>
+                                    <span class="text-gray-400 dark:text-gray-500 text-xs shrink-0 ml-1">
+                                        {{ isExpanded('expense_' + item.category_id) ? '▲' : '▼' }}
+                                    </span>
+                                </button>
+                                <!-- Description detail rows -->
+                                <div v-if="isExpanded('expense_' + item.category_id)" class="bg-red-50/60 dark:bg-red-900/10 border-t border-red-100 dark:border-red-800">
+                                    <div v-if="item.details && item.details.length > 0">
+                                        <div
+                                            v-for="detail in item.details"
+                                            :key="detail.description"
+                                            class="flex items-center justify-between px-8 py-2 border-b border-red-100/60 dark:border-red-800/40 last:border-0"
+                                        >
+                                            <div class="flex items-center gap-2 min-w-0">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-red-400 shrink-0"></span>
+                                                <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ detail.description }}</span>
+                                                <span class="text-xs text-gray-400 shrink-0">({{ detail.count }} รายการ)</span>
+                                            </div>
+                                            <span class="text-sm font-medium text-red-600 dark:text-red-400 ml-4 shrink-0">
+                                                {{ formatCurrency(Number(detail.total)) }}
+                                            </span>
+                                        </div>
                                     </div>
+                                    <div v-else class="px-8 py-2 text-xs text-gray-400">ไม่มีรายละเอียด</div>
                                 </div>
-                                <span class="text-xs text-gray-500 w-12 text-right">
-                                    {{ getPercentage(Number(item.total), expenseTotal) }}%
-                                </span>
                             </div>
                         </div>
                         <div v-else class="text-center text-gray-500 py-8">
