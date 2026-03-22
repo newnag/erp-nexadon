@@ -7,9 +7,9 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: erp_nexadon
+      MYSQL_DATABASE: erp
     ports:
-      - "3306:3306"
+      - "33066:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
