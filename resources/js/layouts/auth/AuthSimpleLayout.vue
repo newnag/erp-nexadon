@@ -21,16 +21,16 @@ defineProps<{
                         class="flex flex-col items-center gap-2 font-medium"
                     >
                         <div
-                            class="mb-1 flex h-9 w-9 items-center justify-center rounded-md"
+                            class="mb-1 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10"
                         >
                             <AppLogoIcon
-                                class="size-9 fill-current text-[var(--foreground)] dark:text-white"
+                                class="size-7 text-primary"
                             />
                         </div>
-                        <span class="sr-only">{{ title }}</span>
+                        <span class="text-lg font-bold tracking-tight">ERP Nexadon</span>
                     </Link>
                     <div class="space-y-2 text-center">
-                        <h1 class="text-xl font-medium">{{ title }}</h1>
+                        <h1 class="text-xl font-semibold">{{ title }}</h1>
                         <p class="text-center text-sm text-muted-foreground">
                             {{ description }}
                         </p>

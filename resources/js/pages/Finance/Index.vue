@@ -4,6 +4,23 @@ import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import QuickTransactionModal from '@/components/QuickTransactionModal.vue';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+    TrendingUp, 
+    TrendingDown, 
+    Wallet, 
+    BarChart3, 
+    FolderOpen, 
+    Plus, 
+    Zap, 
+    Copy, 
+    Pencil, 
+    Trash2,
+    Search,
+    X,
+    FileText
+} from 'lucide-vue-next';
 
 interface Category {
     id: number;
@@ -110,6 +127,7 @@ onUnmounted(() => {
 });
 
 // Filter form
+// Default dates from backend (current month)
 const filterForm = useForm({
     type: props.filters.type || '',
     category_id: props.filters.category_id || '',
@@ -190,114 +208,144 @@ const getPaymentMethodLabel = (method?: string) => {
     <Head title="รายรับรายจ่าย" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-4 sm:py-6">
-            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-                <!-- Header -->
-                <div class="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
-                    <div>
-                        <h2 class="font-semibold text-xl sm:text-2xl text-gray-800 dark:text-gray-100 leading-tight">
-                            รายรับรายจ่าย
-                        </h2>
-                        <p class="text-sm text-muted-foreground mt-1 hidden sm:block">จัดการรายรับรายจ่ายของธุรกิจ</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2 items-center">
-                        <!-- Keyboard shortcut hint -->
-                        <span class="hidden xl:inline text-xs text-gray-400">
-                            กด <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-300">Ctrl+N</kbd> เพื่อเพิ่มรายการด่วน
-                        </span>
-                        <Link href="/finance/categories" class="hidden sm:inline-flex bg-gray-500 hover:bg-gray-700 text-white font-medium text-sm py-2 px-3 rounded transition-colors">
-                            จัดการหมวดหมู่
-                        </Link>
-                        <Link href="/finance/report" class="hidden sm:inline-flex bg-purple-500 hover:bg-purple-700 text-white font-medium text-sm py-2 px-3 rounded transition-colors">
-                            ดูรายงาน
-                        </Link>
-                        <Button @click="openQuickModal" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold py-2 px-3 sm:px-4 rounded shadow-lg text-sm sm:text-base">
-                            ⚡ <span class="hidden xs:inline">บันทึก</span>ด่วน
-                        </Button>
-                        <Link href="/finance/create" class="bg-blue-500 hover:bg-blue-700 text-white font-medium text-sm py-2 px-3 rounded transition-colors">
-                            <span class="sm:hidden">+ เพิ่ม</span>
-                            <span class="hidden sm:inline">บันทึกรายการ</span>
-                        </Link>
-                    </div>
+        <div class="flex h-full flex-1 flex-col gap-4 sm:gap-6 p-3 sm:p-4 md:p-6">
+            <!-- Header -->
+            <div class="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">รายรับรายจ่าย</h1>
+                    <p class="text-sm text-muted-foreground">จัดการรายรับรายจ่ายของธุรกิจ</p>
                 </div>
-
-                <!-- Quick Action Cards - Responsive Grid -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6">
-                    <button
-                        @click="openQuickModal"
-                        class="p-3 sm:p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border border-green-200 dark:border-green-700 rounded-lg hover:shadow-md active:scale-[0.98] transition-all text-left group"
-                    >
-                        <div class="text-xl sm:text-2xl mb-1">📈</div>
-                        <div class="font-medium text-green-700 dark:text-green-400 text-sm sm:text-base">เพิ่มรายรับ</div>
-                        <div class="text-xs text-green-600 dark:text-green-500 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">คลิกเพื่อเริ่ม</div>
-                    </button>
-                    <button
-                        @click="openQuickModal"
-                        class="p-3 sm:p-4 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 border border-red-200 dark:border-red-700 rounded-lg hover:shadow-md active:scale-[0.98] transition-all text-left group"
-                    >
-                        <div class="text-xl sm:text-2xl mb-1">📉</div>
-                        <div class="font-medium text-red-700 dark:text-red-400 text-sm sm:text-base">เพิ่มรายจ่าย</div>
-                        <div class="text-xs text-red-600 dark:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">คลิกเพื่อเริ่ม</div>
-                    </button>
-                    <Link
-                        href="/finance/report"
-                        class="p-3 sm:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border border-purple-200 dark:border-purple-700 rounded-lg hover:shadow-md active:scale-[0.98] transition-all text-left group"
-                    >
-                        <div class="text-xl sm:text-2xl mb-1">📊</div>
-                        <div class="font-medium text-purple-700 dark:text-purple-400 text-sm sm:text-base">ดูรายงาน</div>
-                        <div class="text-xs text-purple-600 dark:text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">วิเคราะห์ข้อมูล</div>
-                    </Link>
-                    <Link
-                        href="/finance/categories"
-                        class="p-3 sm:p-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800/30 dark:to-gray-700/30 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md active:scale-[0.98] transition-all text-left group"
-                    >
-                        <div class="text-xl sm:text-2xl mb-1">📁</div>
-                        <div class="font-medium text-gray-700 dark:text-gray-300 text-sm sm:text-base">จัดการหมวดหมู่</div>
-                        <div class="text-xs text-gray-600 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">เพิ่ม/แก้ไขหมวดหมู่</div>
-                    </Link>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="hidden xl:inline text-xs text-muted-foreground">
+                        กด <kbd class="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">Ctrl+N</kbd> เพื่อเพิ่มด่วน
+                    </span>
+                    <Button as-child variant="outline" size="sm" class="hidden sm:inline-flex">
+                        <Link href="/finance/categories">
+                            <FolderOpen class="mr-1.5 h-4 w-4" />
+                            หมวดหมู่
+                        </Link>
+                    </Button>
+                    <Button as-child variant="outline" size="sm" class="hidden sm:inline-flex">
+                        <Link href="/finance/report">
+                            <BarChart3 class="mr-1.5 h-4 w-4" />
+                            รายงาน
+                        </Link>
+                    </Button>
+                    <Button @click="openQuickModal" size="sm" variant="secondary">
+                        <Zap class="mr-1.5 h-4 w-4" />
+                        บันทึกด่วน
+                    </Button>
+                    <Button as-child size="sm">
+                        <Link href="/finance/create">
+                            <Plus class="mr-1.5 h-4 w-4" />
+                            <span class="hidden xs:inline">บันทึก</span>รายการ
+                        </Link>
+                    </Button>
                 </div>
+            </div>
 
-                <!-- Summary Cards - Responsive -->
-                <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
-                    <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-3 sm:p-4 border border-green-200 dark:border-green-700">
-                        <h3 class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400">รายรับ</h3>
+            <!-- Quick Action Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                <button @click="openQuickModal" class="group">
+                    <Card class="h-full transition-all hover:shadow-md hover:border-green-300 dark:hover:border-green-700 active:scale-[0.98]">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2.5 mb-1">
+                                <div class="rounded-lg bg-green-100 dark:bg-green-900/50 p-1.5">
+                                    <TrendingUp class="h-4 w-4 text-green-600 dark:text-green-400" />
+                                </div>
+                            </div>
+                            <p class="font-medium text-sm">เพิ่มรายรับ</p>
+                            <p class="text-xs text-muted-foreground mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">คลิกเพื่อเริ่ม</p>
+                        </CardContent>
+                    </Card>
+                </button>
+                <button @click="openQuickModal" class="group">
+                    <Card class="h-full transition-all hover:shadow-md hover:border-red-300 dark:hover:border-red-700 active:scale-[0.98]">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2.5 mb-1">
+                                <div class="rounded-lg bg-red-100 dark:bg-red-900/50 p-1.5">
+                                    <TrendingDown class="h-4 w-4 text-red-600 dark:text-red-400" />
+                                </div>
+                            </div>
+                            <p class="font-medium text-sm">เพิ่มรายจ่าย</p>
+                            <p class="text-xs text-muted-foreground mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">คลิกเพื่อเริ่ม</p>
+                        </CardContent>
+                    </Card>
+                </button>
+                <Link href="/finance/report" class="group">
+                    <Card class="h-full transition-all hover:shadow-md hover:border-purple-300 dark:hover:border-purple-700 active:scale-[0.98]">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2.5 mb-1">
+                                <div class="rounded-lg bg-purple-100 dark:bg-purple-900/50 p-1.5">
+                                    <BarChart3 class="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                                </div>
+                            </div>
+                            <p class="font-medium text-sm">ดูรายงาน</p>
+                            <p class="text-xs text-muted-foreground mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">วิเคราะห์ข้อมูล</p>
+                        </CardContent>
+                    </Card>
+                </Link>
+                <Link href="/finance/categories" class="group">
+                    <Card class="h-full transition-all hover:shadow-md hover:border-primary/30 active:scale-[0.98]">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2.5 mb-1">
+                                <div class="rounded-lg bg-muted p-1.5">
+                                    <FolderOpen class="h-4 w-4 text-muted-foreground" />
+                                </div>
+                            </div>
+                            <p class="font-medium text-sm">จัดการหมวดหมู่</p>
+                            <p class="text-xs text-muted-foreground mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">เพิ่ม/แก้ไขหมวดหมู่</p>
+                        </CardContent>
+                    </Card>
+                </Link>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-3 gap-2 sm:gap-4">
+                <Card class="border-green-200 dark:border-green-800/50">
+                    <CardContent class="p-3 sm:p-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <TrendingUp class="h-3.5 w-3.5 text-green-500" />
+                            <span class="text-xs sm:text-sm font-medium text-green-600 dark:text-green-400">รายรับ</span>
+                        </div>
                         <p class="text-base sm:text-2xl font-bold text-green-700 dark:text-green-300 truncate">{{ formatCurrency(summary.total_income) }}</p>
-                    </div>
-                    <div class="bg-red-50 dark:bg-red-900/30 rounded-lg p-3 sm:p-4 border border-red-200 dark:border-red-700">
-                        <h3 class="text-xs sm:text-sm font-medium text-red-600 dark:text-red-400">รายจ่าย</h3>
+                    </CardContent>
+                </Card>
+                <Card class="border-red-200 dark:border-red-800/50">
+                    <CardContent class="p-3 sm:p-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <TrendingDown class="h-3.5 w-3.5 text-red-500" />
+                            <span class="text-xs sm:text-sm font-medium text-red-600 dark:text-red-400">รายจ่าย</span>
+                        </div>
                         <p class="text-base sm:text-2xl font-bold text-red-700 dark:text-red-300 truncate">{{ formatCurrency(summary.total_expense) }}</p>
-                    </div>
-                    <div :class="[
-                        'rounded-lg p-3 sm:p-4 border',
-                        summary.balance >= 0 
-                            ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700' 
-                            : 'bg-orange-50 dark:bg-orange-900/30 border-orange-200 dark:border-orange-700'
-                    ]">
-                        <h3 :class="[
-                            'text-xs sm:text-sm font-medium',
-                            summary.balance >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-orange-600 dark:text-orange-400'
-                        ]">คงเหลือ</h3>
-                        <p :class="[
-                            'text-base sm:text-2xl font-bold truncate',
-                            summary.balance >= 0 ? 'text-blue-700 dark:text-blue-300' : 'text-orange-700 dark:text-orange-300'
-                        ]">{{ formatCurrency(summary.balance) }}</p>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
+                <Card :class="summary.balance >= 0 ? 'border-blue-200 dark:border-blue-800/50' : 'border-orange-200 dark:border-orange-800/50'">
+                    <CardContent class="p-3 sm:p-4">
+                        <div class="flex items-center gap-2 mb-1">
+                            <Wallet :class="['h-3.5 w-3.5', summary.balance >= 0 ? 'text-blue-500' : 'text-orange-500']" />
+                            <span :class="['text-xs sm:text-sm font-medium', summary.balance >= 0 ? 'text-blue-600 dark:text-blue-400' : 'text-orange-600 dark:text-orange-400']">คงเหลือ</span>
+                        </div>
+                        <p :class="['text-base sm:text-2xl font-bold truncate', summary.balance >= 0 ? 'text-blue-700 dark:text-blue-300' : 'text-orange-700 dark:text-orange-300']">{{ formatCurrency(summary.balance) }}</p>
+                    </CardContent>
+                </Card>
+            </div>
 
-                <!-- Filters - Responsive -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3 sm:p-4 mb-6">
+            <!-- Filters -->
+            <Card>
+                <CardContent class="p-3 sm:p-4">
                     <form @submit.prevent="applyFilters" class="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 sm:gap-3 lg:gap-4">
                         <div>
-                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ประเภท</label>
-                            <select v-model="filterForm.type" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm text-sm">
+                            <label class="block text-xs sm:text-sm font-medium mb-1">ประเภท</label>
+                            <select v-model="filterForm.type" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                                 <option value="">ทั้งหมด</option>
                                 <option value="income">รายรับ</option>
                                 <option value="expense">รายจ่าย</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">หมวดหมู่</label>
-                            <select v-model="filterForm.category_id" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm text-sm">
+                            <label class="block text-xs sm:text-sm font-medium mb-1">หมวดหมู่</label>
+                            <select v-model="filterForm.category_id" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                                 <option value="">ทั้งหมด</option>
                                 <option v-for="category in categories" :key="category.id" :value="category.id">
                                     {{ category.name }}
@@ -305,137 +353,151 @@ const getPaymentMethodLabel = (method?: string) => {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ตั้งแต่วันที่</label>
-                            <input type="date" v-model="filterForm.start_date" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm text-sm">
+                            <label class="block text-xs sm:text-sm font-medium mb-1">ตั้งแต่วันที่</label>
+                            <input type="date" v-model="filterForm.start_date" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                         </div>
                         <div>
-                            <label class="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ถึงวันที่</label>
-                            <input type="date" v-model="filterForm.end_date" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm text-sm">
+                            <label class="block text-xs sm:text-sm font-medium mb-1">ถึงวันที่</label>
+                            <input type="date" v-model="filterForm.end_date" class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                         </div>
                         <div class="flex items-end gap-2 pt-2 sm:pt-0">
-                            <button type="submit" class="flex-1 sm:flex-none bg-blue-500 hover:bg-blue-700 text-white font-medium text-sm py-2 px-3 sm:px-4 rounded transition-colors">
+                            <Button type="submit" size="sm" class="flex-1 sm:flex-none">
+                                <Search class="mr-1.5 h-4 w-4" />
                                 ค้นหา
-                            </button>
-                            <button type="button" @click="clearFilters" class="flex-1 sm:flex-none bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white font-medium text-sm py-2 px-3 sm:px-4 rounded transition-colors">
+                            </Button>
+                            <Button type="button" @click="clearFilters" variant="outline" size="sm" class="flex-1 sm:flex-none">
+                                <X class="mr-1.5 h-4 w-4" />
                                 ล้าง
-                            </button>
+                            </Button>
                         </div>
                     </form>
-                </div>
+                </CardContent>
+            </Card>
 
-                <!-- Transactions Table -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-4 sm:p-6 bg-white border-b border-gray-200">
-                        <div class="overflow-x-auto -mx-4 sm:mx-0">
-                            <div class="inline-block min-w-full align-middle px-4 sm:px-0">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วันที่</th>
-                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ประเภท</th>
-                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">หมวดหมู่</th>
-                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">รายละเอียด</th>
-                                            <th class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">วิธีชำระ</th>
-                                            <th class="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">จำนวนเงิน</th>
-                                            <th class="px-4 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">จัดการ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        <tr v-for="transaction in transactions.data" :key="transaction.id">
-                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ formatDate(transaction.transaction_date) }}
-                                            </td>
-                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                                <span :class="[
-                                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                                                    transaction.type === 'income' 
-                                                        ? 'bg-green-100 text-green-800' 
-                                                        : 'bg-red-100 text-red-800'
-                                                ]">
-                                                    {{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
-                                                <span 
-                                                    class="px-2 py-1 text-xs font-medium rounded"
-                                                    :style="{ backgroundColor: transaction.category?.color + '20', color: transaction.category?.color }"
-                                                >
-                                                    {{ transaction.category?.name }}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 sm:px-6 py-4">
-                                                <div class="text-sm text-gray-900">{{ transaction.description }}</div>
-                                                <div v-if="transaction.reference_number" class="text-xs text-gray-500">
-                                                    อ้างอิง: {{ transaction.reference_number }}
-                                                </div>
-                                            </td>
-                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ getPaymentMethodLabel(transaction.payment_method) }}
-                                            </td>
-                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-right">
-                                                <span :class="[
-                                                    'font-semibold',
-                                                    transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
-                                                ]">
-                                                    {{ transaction.type === 'income' ? '+' : '-' }}{{ formatCurrency(transaction.amount) }}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                                <button 
-                                                    @click="duplicateTransaction(transaction)" 
-                                                    class="text-green-600 hover:text-green-900 mr-2"
-                                                    title="คัดลอกรายการนี้"
-                                                >
-                                                    📋
-                                                </button>
-                                                <Link :href="`/finance/${transaction.id}/edit`" class="text-indigo-600 hover:text-indigo-900 mr-3">
-                                                    แก้ไข
+            <!-- Transactions Table -->
+            <Card>
+                <CardHeader class="pb-3">
+                    <CardTitle class="flex items-center gap-2">
+                        <FileText class="h-5 w-5" />
+                        รายการทั้งหมด
+                    </CardTitle>
+                    <CardDescription>{{ transactions.total }} รายการ</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b bg-muted/50">
+                                    <th class="text-left py-3 px-4 text-xs font-medium text-muted-foreground">วันที่</th>
+                                    <th class="text-left py-3 px-4 text-xs font-medium text-muted-foreground">ประเภท</th>
+                                    <th class="text-left py-3 px-4 text-xs font-medium text-muted-foreground">หมวดหมู่</th>
+                                    <th class="text-left py-3 px-4 text-xs font-medium text-muted-foreground">รายละเอียด</th>
+                                    <th class="text-left py-3 px-4 text-xs font-medium text-muted-foreground hidden lg:table-cell">วิธีชำระ</th>
+                                    <th class="text-right py-3 px-4 text-xs font-medium text-muted-foreground">จำนวนเงิน</th>
+                                    <th class="text-center py-3 px-4 text-xs font-medium text-muted-foreground">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="transaction in transactions.data" :key="transaction.id" class="border-b hover:bg-muted/50 transition-colors">
+                                    <td class="py-3 px-4 whitespace-nowrap text-sm text-muted-foreground">
+                                        {{ formatDate(transaction.transaction_date) }}
+                                    </td>
+                                    <td class="py-3 px-4 whitespace-nowrap">
+                                        <Badge :variant="transaction.type === 'income' ? 'outline' : 'destructive'" :class="transaction.type === 'income' ? 'border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-900/30 dark:text-green-400' : ''">
+                                            {{ transaction.type === 'income' ? 'รายรับ' : 'รายจ่าย' }}
+                                        </Badge>
+                                    </td>
+                                    <td class="py-3 px-4 whitespace-nowrap">
+                                        <span 
+                                            class="px-2 py-1 text-xs font-medium rounded-md"
+                                            :style="{ backgroundColor: transaction.category?.color + '18', color: transaction.category?.color }"
+                                        >
+                                            {{ transaction.category?.name }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4">
+                                        <div class="text-sm">{{ transaction.description }}</div>
+                                        <div v-if="transaction.reference_number" class="text-xs text-muted-foreground">
+                                            อ้างอิง: {{ transaction.reference_number }}
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 whitespace-nowrap text-sm text-muted-foreground hidden lg:table-cell">
+                                        {{ getPaymentMethodLabel(transaction.payment_method) }}
+                                    </td>
+                                    <td class="py-3 px-4 whitespace-nowrap text-right">
+                                        <span :class="['font-semibold', transaction.type === 'income' ? 'text-green-600' : 'text-red-600']">
+                                            {{ transaction.type === 'income' ? '+' : '-' }}{{ formatCurrency(transaction.amount) }}
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4 whitespace-nowrap text-center">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <Button 
+                                                @click="duplicateTransaction(transaction)" 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                class="h-8 w-8"
+                                                title="คัดลอกรายการนี้"
+                                            >
+                                                <Copy class="h-3.5 w-3.5" />
+                                            </Button>
+                                            <Button as-child variant="ghost" size="icon" class="h-8 w-8">
+                                                <Link :href="`/finance/${transaction.id}/edit`" title="แก้ไข">
+                                                    <Pencil class="h-3.5 w-3.5" />
                                                 </Link>
-                                                <button @click="deleteTransaction(transaction.id)" class="text-red-600 hover:text-red-900">
-                                                    ลบ
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr v-if="transactions.data.length === 0">
-                                            <td colspan="7" class="px-4 sm:px-6 py-4 text-center text-gray-500">
-                                                ไม่พบรายการ
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                                            </Button>
+                                            <Button 
+                                                @click="deleteTransaction(transaction.id)" 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                class="h-8 w-8 text-destructive hover:text-destructive"
+                                                title="ลบ"
+                                            >
+                                                <Trash2 class="h-3.5 w-3.5" />
+                                            </Button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr v-if="transactions.data.length === 0">
+                                    <td colspan="7" class="py-12 text-center">
+                                        <Wallet class="h-12 w-12 mx-auto text-muted-foreground/50 mb-2" />
+                                        <p class="text-muted-foreground">ไม่พบรายการ</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <!-- Pagination -->
-                        <div v-if="transactions.last_page > 1" class="mt-4 flex justify-center">
-                            <nav class="flex gap-1">
-                                <template v-for="link in transactions.links" :key="link.label">
-                                    <Link
-                                        v-if="link.url"
-                                        :href="link.url"
-                                        :class="[
-                                            'px-3 py-2 rounded text-sm',
-                                            link.active 
-                                                ? 'bg-blue-500 text-white' 
-                                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                                        ]"
-                                    >
+                    <!-- Pagination -->
+                    <div v-if="transactions.last_page > 1" class="mt-4 flex justify-center border-t pt-4">
+                        <nav class="flex gap-1">
+                            <template v-for="link in transactions.links" :key="link.label">
+                                <Button
+                                    v-if="link.url"
+                                    as-child
+                                    :variant="link.active ? 'default' : 'outline'"
+                                    size="sm"
+                                    class="h-8 min-w-8"
+                                >
+                                    <Link :href="link.url">
                                         <!-- eslint-disable-next-line vue/no-v-html -->
                                         <span v-html="link.label" />
                                     </Link>
-                                    <span
-                                        v-else
-                                        class="px-3 py-2 text-sm text-gray-400"
-                                    >
-                                        <!-- eslint-disable-next-line vue/no-v-html -->
-                                        <span v-html="link.label" />
-                                    </span>
-                                </template>
-                            </nav>
-                        </div>
+                                </Button>
+                                <Button
+                                    v-else
+                                    variant="ghost"
+                                    size="sm"
+                                    class="h-8 min-w-8"
+                                    disabled
+                                >
+                                    <!-- eslint-disable-next-line vue/no-v-html -->
+                                    <span v-html="link.label" />
+                                </Button>
+                            </template>
+                        </nav>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
 
         <!-- Quick Transaction Modal -->

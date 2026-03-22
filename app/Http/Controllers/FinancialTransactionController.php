@@ -11,6 +11,10 @@ class FinancialTransactionController extends Controller
 {
     public function index(Request $request)
     {
+        // Default to current month if no date range provided
+        $startDate = $request->input('start_date', now()->startOfMonth()->toDateString());
+        $endDate = $request->input('end_date', now()->endOfMonth()->toDateString());
+
         $query = FinancialTransaction::with(['category', 'user'])
             ->latest('transaction_date');
 
@@ -24,18 +28,14 @@ class FinancialTransactionController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // Filter by date range
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->dateBetween($request->start_date, $request->end_date);
-        }
+        // Always apply date range (defaults to current month)
+        $query->dateBetween($startDate, $endDate);
 
         $transactions = $query->paginate(20)->withQueryString();
 
-        // Calculate summary
-        $summaryQuery = FinancialTransaction::query();
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $summaryQuery->dateBetween($request->start_date, $request->end_date);
-        }
+        // Calculate summary for the same date range
+        $summaryQuery = FinancialTransaction::query()
+            ->dateBetween($startDate, $endDate);
 
         $totalIncome = (clone $summaryQuery)->income()->sum('amount');
         $totalExpense = (clone $summaryQuery)->expense()->sum('amount');
@@ -48,7 +48,12 @@ class FinancialTransactionController extends Controller
                 'total_expense' => $totalExpense,
                 'balance' => $totalIncome - $totalExpense,
             ],
-            'filters' => $request->only(['type', 'category_id', 'start_date', 'end_date']),
+            'filters' => [
+                'type' => $request->input('type'),
+                'category_id' => $request->input('category_id'),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+            ],
         ]);
     }
 

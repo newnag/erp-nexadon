@@ -3,6 +3,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { index, edit, destroy } from '@/routes/recipes';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ChefHat, ArrowLeft, Printer, Pencil, Trash2, Package, Tag, Coins, BarChart3 } from 'lucide-vue-next';
 
 const props = defineProps<{
     recipe: {
@@ -36,7 +40,7 @@ const props = defineProps<{
 
 const breadcrumbs = [
     {
-        title: 'Recipes (SOP)',
+        title: 'สูตรอาหาร (SOP)',
         href: '/recipes',
     },
     {
@@ -92,136 +96,172 @@ const deleteRecipe = () => {
     <Head :title="recipe.name" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="py-4 sm:py-6 lg:py-8">
-            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
-                    <h2 class="font-semibold text-lg sm:text-xl text-gray-800 dark:text-gray-100 leading-tight">
-                        {{ recipe.name }} (SOP)
-                    </h2>
-                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-                        <Link :href="index().url" class="flex-1 sm:flex-none text-center bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded text-sm">
-                            ← กลับ
-                        </Link>
-                        <a :href="`/recipes/${recipe.id}/print`" target="_blank" class="flex-1 sm:flex-none text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded text-sm">
-                            🖨️ พิมพ์
-                        </a>
-                        <Link :href="edit(recipe.id).url" class="flex-1 sm:flex-none text-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded text-sm">
-                            แก้ไข
-                        </Link>
-                        <button @click="deleteRecipe" class="flex-1 sm:flex-none bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 rounded text-sm">
-                            ลบ
-                        </button>
-                    </div>
+        <div class="flex h-full flex-1 flex-col gap-4 sm:gap-6 p-3 sm:p-4 md:p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">{{ recipe.name }}</h1>
+                    <p class="text-sm text-muted-foreground">สูตรอาหาร (SOP)</p>
                 </div>
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <Button as-child variant="outline" size="sm">
+                        <Link :href="index().url">
+                            <ArrowLeft class="mr-1.5 h-4 w-4" /> กลับ
+                        </Link>
+                    </Button>
+                    <Button as-child variant="outline" size="sm">
+                        <a :href="`/recipes/${recipe.id}/print`" target="_blank">
+                            <Printer class="mr-1.5 h-4 w-4" /> พิมพ์
+                        </a>
+                    </Button>
+                    <Button as-child size="sm">
+                        <Link :href="edit(recipe.id).url">
+                            <Pencil class="mr-1.5 h-4 w-4" /> แก้ไข
+                        </Link>
+                    </Button>
+                    <Button @click="deleteRecipe" variant="destructive" size="sm">
+                        <Trash2 class="mr-1.5 h-4 w-4" /> ลบ
+                    </Button>
+                </div>
+            </div>
 
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm rounded-lg">
-                    <div class="p-4 sm:p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                        <!-- Recipe Image & Header Info -->
-                        <div class="flex flex-col md:flex-row gap-6 mb-8">
-                            <!-- Recipe Main Image -->
-                            <div class="flex-shrink-0">
-                                <div v-if="recipe.image_url" class="w-48 h-48 rounded-xl overflow-hidden shadow-lg border-4 border-gray-100">
-                                    <img :src="recipe.image_url" :alt="recipe.name" class="w-full h-full object-cover" />
-                                </div>
-                                <div v-else class="w-48 h-48 rounded-xl bg-gray-100 flex items-center justify-center border-4 border-gray-200">
-                                    <span class="text-6xl">🍽️</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Info Cards -->
-                            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                                    <h3 class="text-sm font-bold text-blue-600 uppercase mb-1">📦 Yield</h3>
-                                    <p class="text-xl font-semibold">{{ recipe.yield_quantity }} {{ recipe.yield_unit }}</p>
-                                </div>
-                                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-                                    <h3 class="text-sm font-bold text-green-600 uppercase mb-1">🏷️ Selling Price</h3>
-                                    <p class="text-xl font-semibold text-green-600">{{ recipe.selling_price || '-' }} THB</p>
-                                    <p v-if="profit" class="text-sm" :class="parseFloat(profit) >= 0 ? 'text-green-600' : 'text-red-600'">
-                                        กำไร: {{ profit }} THB ({{ profitMargin }}%)
-                                    </p>
-                                </div>
-                                <div class="bg-red-50 p-4 rounded-lg border border-red-200">
-                                    <h3 class="text-sm font-bold text-red-600 uppercase mb-1">💰 Total Cost</h3>
-                                    <p class="text-xl font-semibold text-red-600">{{ Number(recipe.total_cost).toFixed(2) }} THB</p>
-                                    <p class="text-sm text-gray-500">{{ costPerUnit }} THB/หน่วย</p>
-                                </div>
-                                <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-                                    <h3 class="text-sm font-bold text-purple-600 uppercase mb-1">📊 Cost Breakdown</h3>
-                                    <p class="text-sm">วัตถุดิบ: {{ ingredientCost }} | แรงงาน: {{ Number(recipe.labor_cost || 0).toFixed(2) }}</p>
-                                    <p class="text-sm">ค่าผลิต: {{ Number(recipe.overhead_cost || 0).toFixed(2) }} | บรรจุภัณฑ์: {{ Number(recipe.packaging_cost || 0).toFixed(2) }}</p>
-                                </div>
-                            </div>
+            <!-- Recipe Image & Info Cards -->
+            <div class="flex flex-col md:flex-row gap-4 sm:gap-6">
+                <div class="flex-shrink-0">
+                    <Card class="overflow-hidden">
+                        <div v-if="recipe.image_url" class="w-full md:w-48 h-48">
+                            <img :src="recipe.image_url" :alt="recipe.name" class="w-full h-full object-cover" />
                         </div>
-
-                        <!-- Cost Breakdown -->
-                        <div class="mb-8 bg-blue-50 p-4 rounded-lg border border-blue-200">
-                            <h3 class="text-lg font-bold text-gray-900 mb-3">สรุปต้นทุน</h3>
-                            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                                <div class="text-center">
-                                    <p class="text-xs text-gray-500 uppercase mb-1">วัตถุดิบ</p>
-                                    <p class="text-lg font-bold text-blue-600">{{ ingredientCost }}</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-xs text-gray-500 uppercase mb-1">แรงงาน</p>
-                                    <p class="text-lg font-bold text-purple-600">{{ Number(recipe.labor_cost || 0).toFixed(2) }}</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-xs text-gray-500 uppercase mb-1">ค่าผลิต</p>
-                                    <p class="text-lg font-bold text-orange-600">{{ Number(recipe.overhead_cost || 0).toFixed(2) }}</p>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-xs text-gray-500 uppercase mb-1">บรรจุภัณฑ์</p>
-                                    <p class="text-lg font-bold text-yellow-600">{{ Number(recipe.packaging_cost || 0).toFixed(2) }}</p>
-                                </div>
-                                <div class="text-center border-l-2 border-blue-300">
-                                    <p class="text-xs text-gray-500 uppercase mb-1">รวมทั้งหมด</p>
-                                    <p class="text-xl font-bold text-red-600">{{ Number(recipe.total_cost).toFixed(2) }}</p>
-                                    <p class="text-xs text-gray-500">{{ costPerUnit }} THB/หน่วย</p>
-                                </div>
-                            </div>
+                        <div v-else class="w-full md:w-48 h-48 bg-muted flex items-center justify-center">
+                            <ChefHat class="h-16 w-16 text-muted-foreground/30" />
                         </div>
-
-                        <div class="mb-8" v-if="recipe.description">
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">Description</h3>
-                            <p class="text-gray-700">{{ recipe.description }}</p>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- Ingredients List -->
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Ingredients</h3>
-                                <ul class="space-y-2">
-                                    <li v-for="ingredient in recipe.ingredients" :key="ingredient.id" class="flex justify-between items-center p-2 hover:bg-gray-50 rounded">
-                                        <span class="font-medium">{{ ingredient.name }}</span>
-                                        <span class="text-gray-600">{{ ingredient.pivot.quantity }} {{ ingredient.pivot.unit }}</span>
-                                    </li>
-                                </ul>
+                    </Card>
+                </div>
+                
+                <div class="flex-1 grid grid-cols-2 gap-3 sm:gap-4">
+                    <Card class="border-blue-200 dark:border-blue-800/50">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <Package class="h-4 w-4 text-blue-500" />
+                                <span class="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase">ปริมาณผลผลิต</span>
                             </div>
+                            <p class="text-xl font-bold">{{ recipe.yield_quantity }} {{ recipe.yield_unit }}</p>
+                        </CardContent>
+                    </Card>
+                    <Card class="border-green-200 dark:border-green-800/50">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <Tag class="h-4 w-4 text-green-500" />
+                                <span class="text-xs font-medium text-green-600 dark:text-green-400 uppercase">ราคาขาย</span>
+                            </div>
+                            <p class="text-xl font-bold text-green-600 dark:text-green-400">{{ recipe.selling_price || '-' }} THB</p>
+                            <p v-if="profit" class="text-sm" :class="parseFloat(profit) >= 0 ? 'text-green-600' : 'text-red-600'">
+                                กำไร: {{ profit }} THB ({{ profitMargin }}%)
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card class="border-red-200 dark:border-red-800/50">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <Coins class="h-4 w-4 text-red-500" />
+                                <span class="text-xs font-medium text-red-600 dark:text-red-400 uppercase">ต้นทุนรวม</span>
+                            </div>
+                            <p class="text-xl font-bold text-red-600 dark:text-red-400">{{ Number(recipe.total_cost).toFixed(2) }} THB</p>
+                            <p class="text-xs text-muted-foreground">{{ costPerUnit }} THB/หน่วย</p>
+                        </CardContent>
+                    </Card>
+                    <Card class="border-purple-200 dark:border-purple-800/50">
+                        <CardContent class="p-3 sm:p-4">
+                            <div class="flex items-center gap-2 mb-1">
+                                <BarChart3 class="h-4 w-4 text-purple-500" />
+                                <span class="text-xs font-medium text-purple-600 dark:text-purple-400 uppercase">โครงสร้างต้นทุน</span>
+                            </div>
+                            <p class="text-xs">วัตถุดิบ: {{ ingredientCost }} | แรงงาน: {{ Number(recipe.labor_cost || 0).toFixed(2) }}</p>
+                            <p class="text-xs">ค่าผลิต: {{ Number(recipe.overhead_cost || 0).toFixed(2) }} | บรรจุภัณฑ์: {{ Number(recipe.packaging_cost || 0).toFixed(2) }}</p>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
 
-                            <!-- Preparation Steps -->
-                            <div>
-                                <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Preparation Steps</h3>
-                                <div class="space-y-4">
-                                    <div v-for="step in recipe.steps" :key="step.id" class="flex gap-4 p-3 bg-gray-50 rounded-lg">
-                                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-md">
-                                            {{ step.step_number }}
-                                        </div>
-                                        <div class="flex-1 pt-1">
-                                            <p class="text-gray-800">{{ step.instruction }}</p>
-                                            <!-- Step Image -->
-                                            <div v-if="step.image_url" class="mt-3">
-                                                <a :href="step.image_url" target="_blank">
-                                                    <img :src="step.image_url" :alt="`ขั้นตอนที่ ${step.step_number}`" class="w-64 h-48 object-cover rounded-lg border-2 border-gray-200 shadow-md hover:scale-105 transition-transform cursor-pointer" />
-                                                </a>
-                                            </div>
-                                        </div>
+            <!-- Cost Breakdown -->
+            <Card>
+                <CardHeader class="pb-3">
+                    <CardTitle>สรุปต้นทุน</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <div class="text-center p-3 rounded-lg bg-muted/50">
+                            <p class="text-xs text-muted-foreground uppercase mb-1">วัตถุดิบ</p>
+                            <p class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ ingredientCost }}</p>
+                        </div>
+                        <div class="text-center p-3 rounded-lg bg-muted/50">
+                            <p class="text-xs text-muted-foreground uppercase mb-1">แรงงาน</p>
+                            <p class="text-lg font-bold text-purple-600 dark:text-purple-400">{{ Number(recipe.labor_cost || 0).toFixed(2) }}</p>
+                        </div>
+                        <div class="text-center p-3 rounded-lg bg-muted/50">
+                            <p class="text-xs text-muted-foreground uppercase mb-1">ค่าผลิต</p>
+                            <p class="text-lg font-bold text-orange-600 dark:text-orange-400">{{ Number(recipe.overhead_cost || 0).toFixed(2) }}</p>
+                        </div>
+                        <div class="text-center p-3 rounded-lg bg-muted/50">
+                            <p class="text-xs text-muted-foreground uppercase mb-1">บรรจุภัณฑ์</p>
+                            <p class="text-lg font-bold text-yellow-600 dark:text-yellow-400">{{ Number(recipe.packaging_cost || 0).toFixed(2) }}</p>
+                        </div>
+                        <div class="text-center p-3 rounded-lg border-l-2 border-primary bg-muted/50">
+                            <p class="text-xs text-muted-foreground uppercase mb-1">รวมทั้งหมด</p>
+                            <p class="text-xl font-bold text-red-600 dark:text-red-400">{{ Number(recipe.total_cost).toFixed(2) }}</p>
+                            <p class="text-xs text-muted-foreground">{{ costPerUnit }} THB/หน่วย</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card v-if="recipe.description">
+                <CardHeader class="pb-3">
+                    <CardTitle>รายละเอียด</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p>{{ recipe.description }}</p>
+                </CardContent>
+            </Card>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Ingredients List -->
+                <Card>
+                    <CardHeader class="pb-3">
+                        <CardTitle>วัตถุดิบ</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul class="space-y-2">
+                            <li v-for="ingredient in recipe.ingredients" :key="ingredient.id" class="flex justify-between items-center p-2.5 hover:bg-muted/50 rounded-lg transition-colors">
+                                <span class="font-medium">{{ ingredient.name }}</span>
+                                <Badge variant="secondary">{{ ingredient.pivot.quantity }} {{ ingredient.pivot.unit }}</Badge>
+                            </li>
+                        </ul>
+                    </CardContent>
+                </Card>
+
+                <!-- Preparation Steps -->
+                <Card>
+                    <CardHeader class="pb-3">
+                        <CardTitle>ขั้นตอนการเตรียม</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div class="space-y-4">
+                            <div v-for="step in recipe.steps" :key="step.id" class="flex gap-4 p-3 bg-muted/50 rounded-lg">
+                                <div class="flex-shrink-0 w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold text-sm shadow-sm">
+                                    {{ step.step_number }}
+                                </div>
+                                <div class="flex-1 pt-1">
+                                    <p>{{ step.instruction }}</p>
+                                    <div v-if="step.image_url" class="mt-3">
+                                        <a :href="step.image_url" target="_blank" rel="noopener noreferrer">
+                                            <img :src="step.image_url" :alt="`ขั้นตอนที่ ${step.step_number}`" class="w-64 h-48 object-cover rounded-lg border shadow-md hover:scale-[1.02] transition-transform cursor-pointer" />
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     </AppLayout>

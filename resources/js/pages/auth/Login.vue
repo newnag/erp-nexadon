@@ -21,10 +21,10 @@ defineProps<{
 
 <template>
     <AuthBase
-        title="Log in to your account"
-        description="Enter your email and password below to log in"
+        title="เข้าสู่ระบบ"
+        description="กรอกอีเมลและรหัสผ่านเพื่อเข้าสู่ระบบ"
     >
-        <Head title="Log in" />
+        <Head title="เข้าสู่ระบบ" />
 
         <div
             v-if="status"
@@ -41,7 +41,7 @@ defineProps<{
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email">อีเมล</Label>
                     <Input
                         id="email"
                         type="email"
@@ -57,14 +57,14 @@ defineProps<{
 
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Password</Label>
+                        <Label for="password">รหัสผ่าน</Label>
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
                             class="text-sm"
                             :tabindex="5"
                         >
-                            Forgot password?
+                            ลืมรหัสผ่าน?
                         </TextLink>
                     </div>
                     <Input
@@ -82,7 +82,7 @@ defineProps<{
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center space-x-3">
                         <Checkbox id="remember" name="remember" :tabindex="3" />
-                        <span>Remember me</span>
+                        <span>จดจำฉัน</span>
                     </Label>
                 </div>
 
@@ -94,7 +94,7 @@ defineProps<{
                     data-test="login-button"
                 >
                     <Spinner v-if="processing" />
-                    Log in
+                    เข้าสู่ระบบ
                 </Button>
             </div>
 
@@ -102,8 +102,8 @@ defineProps<{
                 class="text-center text-sm text-muted-foreground"
                 v-if="canRegister"
             >
-                Don't have an account?
-                <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+                ยังไม่มีบัญชี?
+                <TextLink :href="register()" :tabindex="5">สมัครสมาชิก</TextLink>
             </div>
         </Form>
     </AuthBase>
